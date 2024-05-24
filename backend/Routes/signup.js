@@ -21,7 +21,7 @@
                 }
                 const salt = await bcrypt.genSalt(10);
                 const hashedPassword = await bcrypt.hash(password,salt);
-                const token = jwt.sign({email},process.env.JWT_SECRET);
+                const token = jwt.sign({email},process.env.JWT_SECRET,{expiresIn:'7d'});
                 const newUser = new User({
                     name,
                     email,
