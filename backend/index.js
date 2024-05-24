@@ -11,6 +11,8 @@ mongoose.connect(DATABASE_URL,{
     useUnifiedTopology:true
 }); 
 app.use('/signup',require('./Routes/signup'));
+app.use('/login',require('./Routes/login'));
+app.use('/updateProfile',require('./Routes/updateProfile'));
 app.listen(3000,()=>{
     console.log('Server started on http://localhost:3000');
 });
