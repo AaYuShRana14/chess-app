@@ -1,8 +1,10 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Chessboard } from "react-chessboard";
 import { Chess } from "chess.js";
+
 const Game = () => {
-  const chess = new Chess();
+  const chessRef = useRef(new Chess());
+  const chess = chessRef.current;
   const [selectedSquare, setSelectedSquare] = useState(null);
   const [position, setPosition] = useState(chess.fen());
   const [optionSquares, setOptionSquares] = useState({});
@@ -12,11 +14,9 @@ const Game = () => {
       if (promotion) {
         promotion = promotion.substring(1).toLowerCase();
       }
-      console.log(chess.move({ from, to, promotion }));
       chess.move({ from, to, promotion });
       setPosition(chess.fen());
     } catch (error) {
-      console.log(error);
       return null;
     } finally {
       setOptionSquares({});
@@ -24,7 +24,7 @@ const Game = () => {
   };
 
   const highlightSquares = (square) => {
-    const moves = chess.moves({ square, verbose: true});
+    const moves = chess.moves({ square, verbose: true });
     const newSquares = {};
     moves.map((move) => {
       newSquares[move.to] = {
@@ -44,14 +44,12 @@ const Game = () => {
   };
 
   const squareClick = (square) => {
-    if(selectedSquare) {
+    if (selectedSquare) {
       checkDrop(selectedSquare, square, 'q');
       setSelectedSquare(null);
       return;
     }
     setSelectedSquare(square);
-    const highlightSquares = chess.moves({ square, verbose: true}).map((move) => move.to);
-    console.log(highlightSquares);
     highlightSquares(square);
   };
 
@@ -75,4 +73,5 @@ const Game = () => {
     </div>
   );
 };
-export default Game;  
+
+export default Game;

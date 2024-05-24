@@ -6,8 +6,8 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Game></Game>} />
-        <Route path='/signup' element={<Signup></Signup>} />
+        <Route path="/" element={<Game />} />
+        <Route path="/signup" element={<Signup />} />
       </Routes>
     </BrowserRouter>
   );
