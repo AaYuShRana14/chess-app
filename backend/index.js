@@ -12,9 +12,11 @@ mongoose.connect(DATABASE_URL,{
 }); 
 app.use('/signup',require('./Routes/signup'));
 app.use('/login',require('./Routes/login'));
+app.use('/googleauth',require('./Routes/google'));
+app.use('/oauth',require('./Routes/oauth'));
 app.use('/updateProfile',require('./Routes/updateProfile'));
 app.use('/forgotPassword',require('./Routes/forgotPassword'));
 app.use('/resetPassword',require('./Routes/resetPassword'));
-app.listen(3000,()=>{
+app.listen(8000,()=>{
     console.log('Server started on http://localhost:8000');
 });
