@@ -16,23 +16,29 @@ router.get('/', async (req, res) => {
         const r = await oAuth2Client.getToken(code);
         await oAuth2Client.setCredentials(r.tokens);
         const user = oAuth2Client.credentials;
-        const access_token=oAuth2Client.credentials.access_token
+        const access_token = oAuth2Client.credentials.access_token
         const response = await fetch(`https://www.googleapis.com/oauth2/v3/userinfo?access_token=${access_token}`);
         const data = await response.json();
         const { email, name, picture } = data;
+
         try {
             if (await User.findOne({ email: email })) {
-                return res.status(400).json({ message: 'User already exists' });
+                const token = jwt.sign({ email: email }, process.env.JWT_SECRET);
+                const homepageUrl = `http://localhost:3000/auth-redirect/?token=${token}`;
+                return res.redirect(homepageUrl);
             }
-            const user = new User({
-                name,
-                email,
-                avatar: picture
-            });
-            await user.save();
-            const token = jwt.sign({ email: email }, process.env.JWT_SECRET);
-            console.log(user);
-            res.status(200).json({ message: 'User created successfully', token: token });
+            else{
+
+                const user = new User({
+                    name,
+                    email,
+                    avatar: picture
+                });
+                await user.save();
+                const token = jwt.sign({ email: email }, process.env.JWT_SECRET);
+                const homepageUrl = `http://localhost:3000/auth-redirect/?token=${token}`;
+                res.redirect(homepageUrl);
+            }
         }
         catch (err) {
             console.log(err);
