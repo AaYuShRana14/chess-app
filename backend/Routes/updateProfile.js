@@ -3,7 +3,7 @@ const router=express.Router();
 const User=require('../Models/User');
 const {z}=require('zod');
 const isLoggedin=require('../Middleware/isLoggedin');
-const bcrypt=require('bcrypt');
+const bcrypt=require('bcryptjs');
 const jwt=require('jsonwebtoken');
 require('dotenv').config();
 const JWT_SECRET=process.env.JWT_SECRET;

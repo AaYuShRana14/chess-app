@@ -6,10 +6,12 @@ app.use(cors());
 require('dotenv').config();
 const mongoose=require('mongoose');
 const DATABASE_URL=process.env.DATABASE_URL;
+
 mongoose.connect(DATABASE_URL,{
     useNewUrlParser:true,
     useUnifiedTopology:true
-}); 
+});
+ 
 app.use('/signup',require('./Routes/signup'));
 app.use('/login',require('./Routes/login'));
 app.use('/googleauth',require('./Routes/google'));

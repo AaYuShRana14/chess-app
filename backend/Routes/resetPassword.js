@@ -2,7 +2,7 @@ const expess=require('express');
 const router=expess.Router();
 const User=require('../Models/User');
 const jwt=require('jsonwebtoken');
-const bcrypt=require('bcrypt');
+const bcrypt=require('bcryptjs');
 const {z}=require('zod');
 const passwordSchema=z.object({
     password:z.string().min(6)
