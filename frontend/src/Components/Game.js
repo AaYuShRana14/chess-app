@@ -54,8 +54,8 @@ const Game = () => {
   };
 
   return (
-    <div className="App">
-      <header className="App-header">
+    <div >
+      <header >
         <h1>React Chessboard</h1>
         <div className="board">
           <Chessboard

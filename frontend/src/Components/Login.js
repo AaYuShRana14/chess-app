@@ -1,6 +1,5 @@
-import axios from 'axios'; 
-import React from 'react';  
-const Signup = () => {
+import axios from 'axios';
+const Login=()=>{
     const googleHandler = async (e) => {
         e.preventDefault();
         try {
@@ -22,10 +21,9 @@ const Signup = () => {
 
     return (
         <div>
-            <h1>Signup</h1>
+            <h1>login</h1>
             <button onClick={googleHandler}>Google</button>
         </div>
     );
-};
-
-export default Signup;
+}
+export default Login;
