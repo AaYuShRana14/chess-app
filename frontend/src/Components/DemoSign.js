@@ -10,7 +10,6 @@ const DemoSign = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        // Handle form submission (e.g., send data to backend)
         console.log('Form submitted:', { email, name, password });
     };
 
