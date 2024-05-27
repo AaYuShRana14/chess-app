@@ -17,6 +17,9 @@ router.put('/',isLoggedin,async (req,res)=>{
     const data=updateProfileSchema.safeParse({name,avatar,password});
     if(data.success){
         const user=await User.findOne({email:req.user.email});
+        if(!user){
+            return res.status(400).json({msg:'Invalid credentials'});
+        }
             user.name=name;
             user.avatar=avatar;
             user.password=await bcrypt.hash(password,await bcrypt.genSalt(10));

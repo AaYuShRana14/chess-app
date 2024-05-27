@@ -11,6 +11,9 @@ const Game = () => {
   const [optionSquares, setOptionSquares] = useState({});
   const [playerColor, setPlayerColor] = useState('white'); 
   const [gameStarted, setGameStarted] = useState(false);
+  if(localStorage.getItem('token')===null){
+    window.location.href='/login';
+  }
   const socket = useSocket();
 
   useEffect(() => {

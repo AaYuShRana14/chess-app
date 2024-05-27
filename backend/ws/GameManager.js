@@ -7,7 +7,7 @@ class GameManager {
         this.#users=[];
         this.#games = [];
     }
-    addUser(socket){
+    addUser(socket,userEmail){
         this.#users.push(socket);
         this.addHandler(socket);
     }
