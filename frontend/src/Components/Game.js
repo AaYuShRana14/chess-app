@@ -1,6 +1,7 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Chessboard } from "react-chessboard";
 import { Chess } from "chess.js";
+import { useSocket } from "../hooks/useSocket";
 
 const Game = () => {
   const chessRef = useRef(new Chess());
@@ -8,19 +9,50 @@ const Game = () => {
   const [selectedSquare, setSelectedSquare] = useState(null);
   const [position, setPosition] = useState(chess.fen());
   const [optionSquares, setOptionSquares] = useState({});
+  const [playerColor, setPlayerColor] = useState('white'); 
+  const [gameStarted, setGameStarted] = useState(false);
+  const socket = useSocket();
 
-  const checkDrop = (from, to, promotion) => {
-    try {
-      if (promotion) {
-        promotion = promotion.substring(1).toLowerCase();
+  useEffect(() => {
+    if (!socket) return;
+    socket.onmessage = (message) => {
+      const data = JSON.parse(message.data);
+      console.log(data);
+      if (data.type === 'start') {
+        chess.reset();
+        setPlayerColor(data.color);
+        setPosition(chess.fen());
       }
-      chess.move({ from, to, promotion });
-      setPosition(chess.fen());
-    } catch (error) {
-      return null;
-    } finally {
-      setOptionSquares({});
+      if (data.type === 'move') {
+        chess.move(data.move);
+        setPosition(chess.fen());
+      }
+      if (data.type === 'gameover') {
+        console.log('Game Over');
+      }
     }
+  }, [socket, chess]);
+
+  const startGame = () => {
+    setGameStarted(true);
+    console.log('start');
+    socket.send(JSON.stringify({ type: 'create' }));
+  }
+
+  const checkDrop = (from, to) => {
+    let move = { from, to };
+    if (chess.get(from).type === 'p' && (to[1] === '8' || to[1] === '1')) {
+      move.promotion = 'q';
+    }
+    try{
+      chess.move(move);
+      setPosition(chess.fen());
+      socket.send(JSON.stringify({ type: 'move', move }));
+    }
+    catch(e){
+      return;
+    } 
+    setOptionSquares({});
   };
 
   const highlightSquares = (square) => {
@@ -45,7 +77,7 @@ const Game = () => {
 
   const squareClick = (square) => {
     if (selectedSquare) {
-      checkDrop(selectedSquare, square, 'q');
+      checkDrop(selectedSquare, square);
       setSelectedSquare(null);
       return;
     }
@@ -54,8 +86,8 @@ const Game = () => {
   };
 
   return (
-    <div >
-      <header >
+    <div>
+      <header>
         <h1>React Chessboard</h1>
         <div className="board">
           <Chessboard
@@ -66,10 +98,12 @@ const Game = () => {
             animationDuration={0}
             onSquareClick={squareClick}
             customSquareStyles={optionSquares}
+            boardOrientation={playerColor} 
             onPieceDragBegin={(piece, square) => highlightSquares(square)}
           />
         </div>
       </header>
+      <button onClick={startGame} disabled={gameStarted}>Play</button>
     </div>
   );
 };

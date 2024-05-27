@@ -7,7 +7,7 @@ class Game {
         this.moves = [];
         this.startTime = Date.now();
         this.totalMoves = 0;
-        
+        // console.log("p1", "p2");
         this.player1.send(JSON.stringify({ type: 'start', color: 'white' }));
         this.player2.send(JSON.stringify({ type: 'start', color: 'black' }));
     }
@@ -24,10 +24,10 @@ class Game {
         
         try {
             this.board.move(move);
-            console.log(this.board.ascii());
-            console.log(this.board.turn());
+            // console.log(this.board.ascii());
+            // console.log(this.board.turn());
             this.totalMoves++;
-            console.log(this.totalMoves);
+            // console.log(this.totalMoves);
             this.moves.push(move);
         } catch (e) {
             return;
