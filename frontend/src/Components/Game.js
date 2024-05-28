@@ -42,13 +42,17 @@ const Game = () => {
     socket.send(JSON.stringify({ type: 'create' }));
   }
 
-  const checkDrop = (from, to) => {
-    let move = { from, to };
-    if (chess.get(from).type === 'p' && (to[1] === '8' || to[1] === '1')) {
-      move.promotion = 'q';
-    }
+  const checkDrop = (from, to,promotion) => {
+    console.log(from, to, promotion);
+    if(!promotion) promotion = 'wQ';
+    promotion = promotion.substring(1).toLowerCase();
+    let move = { from, to, promotion};
     try{
-      chess.move(move);
+      const result = chess.move(move);
+      if(result.color !== playerColor.charAt(0)){
+        chess.undo();
+        throw new Error('Invalid Move');
+      }
       setPosition(chess.fen());
       socket.send(JSON.stringify({ type: 'move', move }));
     }
