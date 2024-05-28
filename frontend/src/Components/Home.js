@@ -62,11 +62,12 @@ const Board = () => {
     const interval = setInterval(() => {
       if (moveIndex < moves.length) {
         const move = moves[moveIndex];
-        const result = chessRef.current.move(move);
-        if (result) {
+        try{
+          chessRef.current.move(move);
           setPosition(chessRef.current.fen());
           setMoveIndex(moveIndex + 1);
-        } else {
+        }
+        catch(e){
           console.error(`Invalid move: ${move}`);
           clearInterval(interval);
         }

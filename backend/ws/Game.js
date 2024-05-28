@@ -12,8 +12,7 @@ class Game {
     }
 
     makemove(player, move) {
-        // console.log(move);
-        
+
         if (this.totalMoves % 2 === 0 && player !== this.player1) {
             return;
         }

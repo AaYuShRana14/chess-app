@@ -3,6 +3,10 @@ export const useSocket = () => {
   const [socket, setSocket] = useState(null);
   useEffect(() => {
     const token=localStorage.getItem('token');
+    if(localStorage.getItem('token')===null){
+      window.location.href='/login';
+      return;
+    }
     console.log(token);
     const ws = new WebSocket(`ws://localhost:8080?token=${token}`);
     ws.onopen = () => {
