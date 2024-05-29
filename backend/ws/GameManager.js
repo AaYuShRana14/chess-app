@@ -7,25 +7,26 @@ class GameManager {
         this.#users=[];
         this.#games = [];
     }
-    addUser(socket,userEmail){
-        this.#users.push(socket);
-        this.addHandler(socket);
+    addUser(player){
+        this.#users.push(player);
+        this.addHandler(player);
     }
-    removeUser(socket){
-        this.#users = this.#users.filter(user=>user!==socket);
+    removeUser(player){
+        this.#users = this.#users.filter(user=>user.email!==player.email);
     }
-    addHandler(socket){
+    addHandler(player){
+        const socket = player.socket;
         socket.on('message', message => {
             message = JSON.parse(message);
             if(message.type==='create'){
-                if(this.#pendingUser){
-                    const game = new Game(this.#pendingUser, socket);
+            if(this.#pendingUser && this.#pendingUser.email!==player.email){
+                    const game = new Game(this.#pendingUser, player);
                     this.#games.push(game);
                     console.log('Game Created');    
                     this.#pendingUser = null;
                 }
                 else{
-                    this.#pendingUser = socket;
+                    this.#pendingUser = player;
                 }
             }
             if(message.type==='move'){
