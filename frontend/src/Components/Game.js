@@ -12,7 +12,7 @@ const Game = () => {
   const [playerColor, setPlayerColor] = useState('white'); 
   const [gameStarted, setGameStarted] = useState(false);
   if(localStorage.getItem('token')===null){
-    window.location.href='/login';
+    window.location.href='/signin';
   }
   const socket = useSocket();
 
