@@ -7,7 +7,7 @@ const {z}=require('zod');
 const passwordSchema=z.object({
     password:z.string().min(6)
 });
-router.get('/:resettoken',async (req,res)=>{
+router.post('/:resettoken',async (req,res)=>{
     try{
         const user=jwt.verify(req.params.resettoken,process.env.JWT_SECRET);
         const curUser=await User.findOne({email:user.email});
@@ -26,7 +26,6 @@ router.get('/:resettoken',async (req,res)=>{
         else{
             res.status(400).json({msg:'Invalid token'});
         }
-
     }
     catch(err){
         res.status(400).json({msg:'Invalid token'});

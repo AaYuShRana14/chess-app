@@ -5,7 +5,7 @@
     const jwt = require('jsonwebtoken');
     const {z}=require('zod');
     const userSchema=z.object({
-        name:z.string().min(4),
+        name:z.string(),
         email:z.string().email(),
         password:z.string().min(6)
     });
@@ -26,7 +26,7 @@
                     name,
                     email,
                     password:hashedPassword,
-                    avatar:avatar || 'default.jpg'
+                    avatar: avatar || 'default.jpg'
                 });
                 await newUser.save();
                 res.json({msg:'User created successfully',token});
