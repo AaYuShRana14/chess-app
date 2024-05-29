@@ -19,10 +19,8 @@ class GameManager {
         socket.on('message', message => {
             message = JSON.parse(message);
             if(message.type==='create'){
-                if(this.#pendingUser){
-                    console.log("hola amigos")
-                    const game = new Game(this.#pendingUser.socket, socket);
-                    console.log(game);
+            if(this.#pendingUser && this.#pendingUser.email!==player.email){
+                    const game = new Game(this.#pendingUser, player);
                     this.#games.push(game);
                     console.log('Game Created');    
                     this.#pendingUser = null;

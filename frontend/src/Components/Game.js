@@ -2,7 +2,6 @@ import { useState, useRef, useEffect } from "react";
 import { Chessboard } from "react-chessboard";
 import { Chess } from "chess.js";
 import { useSocket } from "../hooks/useSocket";
-
 const Game = () => {
   const chessRef = useRef(new Chess());
   const chess = chessRef.current;
@@ -11,6 +10,7 @@ const Game = () => {
   const [optionSquares, setOptionSquares] = useState({});
   const [playerColor, setPlayerColor] = useState('white'); 
   const [gameStarted, setGameStarted] = useState(false);
+  const[opponent,setOpponent] = useState(null);
   const socket = useSocket();
   useEffect(() => {
     if(localStorage.getItem('token')===null){
@@ -21,6 +21,7 @@ const Game = () => {
       const data = JSON.parse(message.data);
       console.log(data);
       if (data.type === 'start') {
+        setOpponent(data.opponent);
         chess.reset();
         setPlayerColor(data.color);
         setPosition(chess.fen());
@@ -93,6 +94,7 @@ const Game = () => {
 
   return (
     <div>
+    {opponent!==null && <h2>Opponent: {opponent.name} rating:{opponent.rating}</h2>}
       <header>
         <h1>React Chessboard</h1>
         <div className="board">
