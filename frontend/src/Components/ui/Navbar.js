@@ -43,7 +43,7 @@ const Navbar = () => {
                 </a>
               </li>
               <li className="navbar-item">
-                <a href="#play" className="navbar-link">
+                <a href="/game" className="navbar-link">
                   Play
                 </a>
               </li>

@@ -57,7 +57,7 @@ const Game = () => {
         throw new Error('Invalid Move');
       }
       setPosition(chess.fen());
-      socket.send(JSON.stringify({ type: 'move', move }));
+      socket.send(JSON.stringify({ type: 'move', move: result.san }));
     }
     catch(e){
       return;
