@@ -1,4 +1,4 @@
-const User = require('../models/User');
+const User = require('./Models/User');
 class Player{
     constructor(socket,email){
         this.socket = socket;
