@@ -1,0 +1,11 @@
+.board {
+  width: 45%;
+  display: flex;
+}
+
+.App-header {
+  margin: 2vh 10vw;
+}
+body{
+  margin: 0;
+}
