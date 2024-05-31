@@ -21,14 +21,16 @@
                 }
                 const salt = await bcrypt.genSalt(10);
                 const hashedPassword = await bcrypt.hash(password,salt);
-                const token = jwt.sign({email},process.env.JWT_SECRET,{expiresIn:'7d'});
                 const newUser = new User({
                     name,
                     email,
                     password:hashedPassword,
-                    avatar: avatar || 'default.jpg'
+                    avatar: avatar || 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTLsbDRAHDZCUxgdFHSARF96NvKPWCboAe7-Q&s',
+                    handlename: name
                 });
                 await newUser.save();
+                const id=newUser._id;
+                const token = jwt.sign({email,id},process.env.JWT_SECRET,{expiresIn:'7d'});
                 res.json({msg:'User created successfully',token});
             }
             catch(err){

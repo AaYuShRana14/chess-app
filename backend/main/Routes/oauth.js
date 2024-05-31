@@ -22,8 +22,10 @@ router.get('/', async (req, res) => {
         const { email, name, picture } = data;
 
         try {
-            if (await User.findOne({ email: email })) {
-                const token = jwt.sign({ email: email }, process.env.JWT_SECRET);
+            const u=await User.findOne({ email: email });
+            if (u) {
+                const id=u._id;
+                const token = jwt.sign({ email: email ,id}, process.env.JWT_SECRET);
                 const homepageUrl = `http://localhost:3000/auth-redirect/?token=${token}`;
                 return res.redirect(homepageUrl);
             }
@@ -32,10 +34,12 @@ router.get('/', async (req, res) => {
                 const user = new User({
                     name,
                     email,
-                    avatar: picture
+                    avatar: picture,
+                    handlename: name,
                 });
                 await user.save();
-                const token = jwt.sign({ email: email }, process.env.JWT_SECRET);
+                const id=user._id;
+                const token = jwt.sign({ email: email ,id}, process.env.JWT_SECRET);
                 const homepageUrl = `http://localhost:3000/auth-redirect/?token=${token}`;
                 res.redirect(homepageUrl);
             }
