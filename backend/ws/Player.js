@@ -1,6 +1,8 @@
 const User = require('./Models/User');
+const { v4: uuid } = require('uuid');
 class Player{
     constructor(socket,email){
+        this.id = uuid();
         this.socket = socket;
         this.email = email;
     }
