@@ -7,8 +7,8 @@ class Game {
         this.player2 = p2.socket;
         this.board = new Chess();
         this.moves = [];
-        this.player1Time = 60 * 1000;
-        this.player2Time = 60 * 1000;
+        this.player1Time = 10 * 60 * 1000;
+        this.player2Time = 10 * 60 * 1000;
         this.lastMoveTime = Date.now();
         this.totalMoves = 0;
         this.moveTimeout = null;

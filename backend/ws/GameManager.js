@@ -49,9 +49,9 @@ class GameManager {
       }
     } else {
       this.#users.push(player);
-      this.addHandler(player);
       console.log(this.#games.length);
     }
+    this.addHandler(player);
   }
   removeUser(player) {
     const socket = player.socket;
@@ -85,6 +85,7 @@ class GameManager {
     const socket = player.socket;
     socket.on("message", (message) => {
       message = JSON.parse(message);
+      console.log(message);
       if (message.type === "create") {
         if (this.#pendingUser && this.#pendingUser.email !== player.email) {
           const game = new Game(this.#pendingUser, player);
@@ -105,6 +106,7 @@ class GameManager {
           (game) => game.player1 === socket || game.player2 === socket
         );
         if (game) {
+            console.log(game.p1.id, " ", game.p2.id, " ", player.id);
             clearTimeout(game.moveTimeout);
             const elapsedTime = Date.now() - game.lastMoveTime;
             if (game.totalMoves % 2 === 0) {
@@ -136,6 +138,9 @@ class GameManager {
                 game.player1.send(JSON.stringify({ type: "gameover", winner }));
                 game.player2.send(JSON.stringify({ type: "gameover", winner }));
             }, time, game);
+        }
+        else {
+            console.log(player.id);
         }
       }
     });
