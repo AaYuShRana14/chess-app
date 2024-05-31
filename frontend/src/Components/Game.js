@@ -56,6 +56,7 @@ const Game = () => {
         chess.undo();
         throw new Error('Invalid Move');
       }
+      
       setPosition(chess.fen());
       socket.send(JSON.stringify({ type: 'move', move: result.san }));
     }
