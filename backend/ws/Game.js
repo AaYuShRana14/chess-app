@@ -7,8 +7,11 @@ class Game {
         this.player2 = p2.socket;
         this.board = new Chess();
         this.moves = [];
-        this.startTime = Date.now();
+        this.player1Time = 60 * 1000;
+        this.player2Time = 60 * 1000;
+        this.lastMoveTime = Date.now();
         this.totalMoves = 0;
+        this.moveTimeout = null;
         this.player1.send(JSON.stringify({ type: 'start', color: 'white',opponent:{mail:p2.email,name:p2.name,rating:p2.rating}}));
         this.player2.send(JSON.stringify({ type: 'start', color: 'black' ,opponent:{mail:p1.email,name:p1.name,rating:p1.rating}}));
     }
