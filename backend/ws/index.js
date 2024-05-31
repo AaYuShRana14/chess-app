@@ -27,8 +27,8 @@ wss.on('connection', async(ws, req) => {
     const player = new Player(ws, userEmail);
     await player.init();
     gameManager.addUser(player);
-    ws.on('disconnect', () => {
+    ws.on('close', () => {
+        console.log('Disconnected');
         gameManager.removeUser(player);
-
     });
 });

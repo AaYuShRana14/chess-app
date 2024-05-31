@@ -1,41 +1,144 @@
-const Game = require('./Game.js');
+const Game = require("./Game.js");
 class GameManager {
-    #games;
-    #pendingUser;
-    #users;
-    constructor() {
-        this.#users=[];
-        this.#games = [];
+  #games;
+  #pendingUser;
+  #users;
+  constructor() {
+    this.#users = [];
+    this.#games = [];
+  }
+  addUser(player) {
+    const game = this.#games.find(
+      (game) => game.p1.email === player.email || game.p2.email === player.email
+    );
+    if (game) {
+      if (game.p1.email === player.email) {
+        game.player1.close();
+        game.p1 = player;
+        game.player1 = player.socket;
+        player.socket.send(
+          JSON.stringify({
+            type: "Reconnect",
+            color: "white",
+            opponent: {
+              mail: game.p2.email,
+              name: game.p2.name,
+              rating: game.p2.rating,
+            },
+            moves: game.board.history(),
+          })
+        );
+        game.player2.send(JSON.stringify({ type: "OpponentReconnected" }));
+      } else {
+        game.player2.close();
+        game.p2 = player;
+        game.player2 = player.socket;
+        player.socket.send(
+          JSON.stringify({
+            type: "Reconnect",
+            color: "black",
+            opponent: {
+              mail: game.p1.email,
+              name: game.p1.name,
+              rating: game.p1.rating,
+            },
+            moves: game.board.history(),
+          })
+        );
+        game.player1.send(JSON.stringify({ type: "OpponentReconnected" }));
+      }
+    } else {
+      this.#users.push(player);
+      this.addHandler(player);
+      console.log(this.#games.length);
     }
-    addUser(player){
-        this.#users.push(player);
-        this.addHandler(player);
+  }
+  removeUser(player) {
+    const socket = player.socket;
+    const game = this.#games.find(
+      (game) => game.player1 === socket || game.player2 === socket
+    );
+    if (game) {
+      if (game.player1 === socket) {
+        game.player2.send(JSON.stringify({ type: "OpponentDisconnected" }));
+      } else {
+        game.player1.send(JSON.stringify({ type: "OpponentDisconnected" }));
+      }
     }
-    removeUser(player){
-        this.#users = this.#users.filter(user=>user.email!==player.email);
-    }
-    addHandler(player){
-        const socket = player.socket;
-        socket.on('message', message => {
-            message = JSON.parse(message);
-            if(message.type==='create') {
-            if(this.#pendingUser && this.#pendingUser.email!==player.email){
-                    const game = new Game(this.#pendingUser, player);
-                    this.#games.push(game);
-                    console.log('Game Created');    
-                    this.#pendingUser = null;
+    setTimeout(() => {
+      const game = this.#games.find(
+        (game) => game.player1 === socket || game.player2 === socket
+      );
+      if (game) {
+        if (game.player1 === socket) {
+          game.player2.send(JSON.stringify({ type: "Win" }));
+          game.player2.close();
+        } else {
+          game.player1.send(JSON.stringify({ type: "Win" }));
+          game.player1.close();
+        }
+        this.#games = this.#games.filter((g) => g !== game);
+      }
+    }, 20000);
+  }
+  addHandler(player) {
+    const socket = player.socket;
+    socket.on("message", (message) => {
+      message = JSON.parse(message);
+      if (message.type === "create") {
+        if (this.#pendingUser && this.#pendingUser.email !== player.email) {
+          const game = new Game(this.#pendingUser, player);
+          this.#games.push(game);
+          console.log("Game Created");
+          game.moveTimeout = setTimeout((game) => {
+            const winner = game.board.turn() === "w" ? "black" : "white";
+            game.player1.send(JSON.stringify({ type: "gameover", winner }));
+            game.player2.send(JSON.stringify({ type: "gameover", winner }));
+          }, game.player1Time, game);
+          this.#pendingUser = null;
+        } else {
+          this.#pendingUser = player;
+        }
+      }
+      if (message.type === "move") {
+        const game = this.#games.find(
+          (game) => game.player1 === socket || game.player2 === socket
+        );
+        if (game) {
+            clearTimeout(game.moveTimeout);
+            const elapsedTime = Date.now() - game.lastMoveTime;
+            if (game.totalMoves % 2 === 0) {
+                game.player1Time -= elapsedTime;
+                if(game.player1Time <= 0){
+                    game.player2.send(JSON.stringify({ type: 'gameover', winner: 'black' }));
+                    game.player1.send(JSON.stringify({ type: 'gameover', winner: 'black' }));
+                    game.player2.close();
+                    game.player1.close();
+                    this.#games = this.#games.filter((g) => g !== game);
+                    return;
                 }
-                else{
-                    this.#pendingUser = player;
+            } else {
+                game.player2Time -= elapsedTime;
+                if(game.player2Time <= 0){
+                    game.player2.send(JSON.stringify({ type: 'gameover', winner: 'white' }));
+                    game.player1.send(JSON.stringify({ type: 'gameover', winner: 'white' }));
+                    game.player2.close();
+                    game.player1.close();
+                    this.#games = this.#games.filter((g) => g !== game);
+                    return;
                 }
             }
-            if(message.type==='move'){
-                const game = this.#games.find(game=>game.player1===socket||game.player2===socket);
-                if(game){
-                    game.makemove(socket,message.move);
-                }
-            }
-        });
-    }
+            game.lastMoveTime = Date.now();
+            const time = game.totalMoves % 2 === 0 ? game.player1Time : game.player2Time;
+            game.makemove(socket, message.move);
+            game.moveTimeout = setTimeout((game) => {
+                const winner = game.board.turn() === "w" ? "black" : "white";
+                game.player1.send(JSON.stringify({ type: "gameover", winner }));
+                game.player2.send(JSON.stringify({ type: "gameover", winner }));
+            }, time, game);
+        }
+      }
+    });
+  }
 }
 module.exports = GameManager;
