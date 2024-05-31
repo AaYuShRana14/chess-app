@@ -4,8 +4,7 @@ import { Chess } from "chess.js";
 import { ContainerScroll } from "./ui/container-scroll-animation";
 import { Boxes } from "./ui/background-boxes";
 import  Navbar  from "./ui/Navbar.js";
-import { cn } from "../utils/cn.js";
-
+import{useNavigate} from 'react-router-dom';
 const Board = () => {
   const chessRef = useRef(new Chess());
   const [position, setPosition] = useState(chessRef.current.fen());
@@ -101,6 +100,16 @@ const Board = () => {
 };
 
 const Home = () => {
+  const navigate=useNavigate();
+  const gameHandler = (e) => {
+    e.preventDefault();
+    if(localStorage.getItem("chess-app-token")){
+      navigate('/game');
+    }
+    else{
+      navigate('/signin');
+    }
+  }
   return (
     <>
     <Navbar />
@@ -124,8 +133,8 @@ const Home = () => {
             <Board />
           </ContainerScroll>
         </div>
-        <button class="cta">
-    <span class="span">NEXT</span>
+        <button onClick={gameHandler} class="cta">
+    <span class="span">PLAY</span>
     <span class="second">
       <svg width="50px" height="20px" viewBox="0 0 66 43" version="1.1" xmlns="http://www.w3.org/2000/svg" {...{ "xmlns:xlink": "http://www.w3.org/1999/xlink" }}>
         <g id="arrow" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">

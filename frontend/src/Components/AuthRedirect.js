@@ -8,7 +8,7 @@ const AuthRedirect = () => {
         const params = new URLSearchParams(window.location.search);
         const token = params.get('token');
         if (token) {
-            localStorage.setItem('token', token);
+            localStorage.setItem('chess-app-token', token);
             navigate('/');  
         } 
     }, [navigate]);
