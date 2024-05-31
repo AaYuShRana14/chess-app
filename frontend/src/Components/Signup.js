@@ -80,7 +80,7 @@ function Signup() {
 
       try {
         const response = await axios.post("http://localhost:8000/signup", data);
-        localStorage.setItem("token", response.data.token);
+        localStorage.setItem("chess-app-token", response.data.token);
         navigate("/game");
         setErrors({});
       } catch (error) {
@@ -110,7 +110,7 @@ function Signup() {
               Sign up
             </Heading>
             <Text fontSize={"lg"} color={"gray.600"}>
-              to enjoy all of our cool features ✌️
+            Unlock the Grandmaster Within You
             </Text>
           </Stack>
           <Box

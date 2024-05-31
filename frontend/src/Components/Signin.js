@@ -48,7 +48,7 @@ import {
       if (emailValid && passwordValid) {
         try {
           const response = await axios.post("http://localhost:8000/login", { email, password });
-          localStorage.setItem("token", response.data.token);
+          localStorage.setItem("chess-app-token", response.data.token);
           navigate("/game");
           setFormError("");
         } catch (error) {
@@ -75,7 +75,7 @@ import {
             <Stack align={"center"}>
               <Heading fontSize={"4xl"}>Sign in to your account</Heading>
               <Text fontSize={"lg"} color={"gray.600"}>
-                to enjoy all of our cool <Link color={"blue.400"}>features</Link> ✌️
+              Strategize. Compete. Triumph
               </Text>
             </Stack>
             <Box
@@ -140,7 +140,7 @@ import {
                   </Stack>
                   <Stack pt={6}>
                     <Text align={"center"}>
-                      Already a user? <Link href="/signup" color={"blue.400"}>Signup</Link>
+                      New Here? <Link href="/signup" color={"blue.400"}>Signup</Link>
                     </Text>
                   </Stack>
                 </Stack>
