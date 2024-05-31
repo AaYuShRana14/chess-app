@@ -10,6 +10,7 @@ const Game = () => {
   const [optionSquares, setOptionSquares] = useState({});
   const [playerColor, setPlayerColor] = useState('white'); 
   const [gameStarted, setGameStarted] = useState(false);
+  
   if(localStorage.getItem('token')===null){
     window.location.href='/signin';
   }
@@ -35,6 +36,15 @@ const Game = () => {
       }
       if (data.type === 'gameover') {
         console.log('Game Over');
+      }
+      if(data.type === 'Reconnect') {
+        setOpponent(data.opponent);
+        setPlayerColor(data.color);
+        setGameStarted(true);
+        data.moves.forEach(move => {
+          chess.move(move);
+        });
+        setPosition(chess.fen());
       }
     }
   }, [socket, chess]);
@@ -101,7 +111,7 @@ const Game = () => {
     {opponent!==null && <h2>Opponent: {opponent.name} rating:{opponent.rating}</h2>}
       <header>
         <h1>React Chessboard</h1>
-        <div className="board">
+        <div className="board" style={{"width":"30%"}}>
           <Chessboard
             id="BasicBoard"
             position={position}
