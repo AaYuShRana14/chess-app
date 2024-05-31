@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import "./Navbar.css"; // Create and import this CSS file
-
+import "./Navbar.css";
+import { NavLink } from "react-router-dom";
 const Navbar = () => {
   const [scrolling, setScrolling] = useState(false);
 
@@ -22,7 +22,7 @@ const Navbar = () => {
   return (
     <nav className={`navbar ${scrolling ? "navbar-scrolling" : ""}`}>
       <div className="navbar-container">
-        <a href="#" className="navbar-logo">
+        <NavLink to={"/"} className="navbar-logo">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 512 512"
@@ -33,14 +33,14 @@ const Navbar = () => {
             />
           </svg>
           <h1>Chessmate</h1>
-        </a>
+          </NavLink>
         <ul className="navbar-menu">
-          {localStorage.getItem("token") ? (
+          {localStorage.getItem("chess-app-token") ? (
             <>
               <li className="navbar-item">
-                <a href="#profile" className="navbar-link">
+                <NavLink to="/updateProfile" className="navbar-link">
                   Profile
-                </a>
+                  </NavLink>
               </li>
               <li className="navbar-item">
                 <a href="/game" className="navbar-link">

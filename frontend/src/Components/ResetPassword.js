@@ -38,7 +38,7 @@ export default function ResetPassword() {
       const response = await axios.post(`http://localhost:8000/reset-password/${token}`, {
         password
       });
-      localStorage.setItem("token", response.data.token);
+      localStorage.setItem("chess-app-token", response.data.token);
       navigate("/");
     } catch (error) {
         if(error.response.status !== 500) {

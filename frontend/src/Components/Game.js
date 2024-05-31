@@ -10,14 +10,14 @@ const Game = () => {
   const [optionSquares, setOptionSquares] = useState({});
   const [playerColor, setPlayerColor] = useState('white'); 
   const [gameStarted, setGameStarted] = useState(false);
-  if(localStorage.getItem('token')===null){
+  if(localStorage.getItem('chess-app-token')===null){
     window.location.href='/signin';
   }
   const[opponent,setOpponent] = useState(null);
   const socket = useSocket();
   useEffect(() => {
-    if(localStorage.getItem('token')===null){
-      window.location.href='/login';
+    if(localStorage.getItem('chess-app-token')===null){
+      window.location.href='/signin';
     }
     if (!socket) return;
     socket.onmessage = (message) => {

@@ -13,8 +13,8 @@ mongoose.connect(DATABASE_URL,{
 });
  
 app.use('/signup',require('./Routes/signup'));
-
 app.use('/login',require('./Routes/login'));
+app.use('/profile',require('./Routes/profile'));
 app.use('/googleauth',require('./Routes/google'));
 app.use('/oauth',require('./Routes/oauth'));
 app.use('/updateProfile',require('./Routes/updateProfile'));
