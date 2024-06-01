@@ -1,5 +1,6 @@
 const Chess = require('chess.js').Chess;
-const axios = require('axios');
+const updateStatus = require("./updateStatus.js");
+require('dotenv').config();
 class Game {
     constructor(p1, p2) {
         this.p1=p1;
@@ -30,12 +31,19 @@ class Game {
             return;
         }
         if (this.board.isGameOver()) {
+            if(this.board.isStalemate()||this.board.isThreefoldRepetition()||this.board.isDraw()){
+                const winner = 'draw';
+                this.player1.send(JSON.stringify({ type: 'gameover', winner }));
+                this.player2.send(JSON.stringify({ type: 'gameover', winner }));
+                updateStatus(this.p1.id,this.p2.id,"draw",this.board.history(),process.env.PASS_KEY);
+                return;
+            }
             const winner = this.board.turn() === 'w' ? 'black' : 'white';
             this.player1.send(JSON.stringify({ type: 'gameover', winner }));
             this.player2.send(JSON.stringify({ type: 'gameover', winner }));
-            axios.put('http://localhost:8000/game/update').then((res) => {
-                console.log(res.data);
-            });
+            const winnerid=winner==="white"?this.p1.id:this.p2.id;
+            const loserid=winner==="white"?this.p2.id:this.p1.id;
+            updateStatus(winnerid,loserid,"win",this.board.history(),process.env.PASS_KEY);
             return;
         }
         const message = JSON.stringify({ type: 'move', move });
