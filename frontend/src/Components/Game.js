@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import { Chessboard } from "react-chessboard";
 import { Chess } from "chess.js";
 import { useSocket } from "../hooks/useSocket";
+
 const Game = () => {
   const chessRef = useRef(new Chess());
   const chess = chessRef.current;
@@ -10,21 +11,27 @@ const Game = () => {
   const [optionSquares, setOptionSquares] = useState({});
   const [playerColor, setPlayerColor] = useState('white'); 
   const [gameStarted, setGameStarted] = useState(false);
-  
-  if(localStorage.getItem('token')===null){
-    window.location.href='/signin';
+  const [chats, setChats] = useState([]);
+  const [chat, setChat] = useState('');
+  const [opponent, setOpponent] = useState(null);
+
+  if (localStorage.getItem('chess-app-token') === null) {
+    window.location.href = '/signin';
   }
-  const[opponent,setOpponent] = useState(null);
+
   const socket = useSocket();
+
   useEffect(() => {
-    if(localStorage.getItem('chess-app-token')===null){
-      window.location.href='/signin';
+    if (localStorage.getItem('chess-app-token') === null) {
+      window.location.href = '/signin';
     }
     if (!socket) return;
+
     socket.onmessage = (message) => {
       const data = JSON.parse(message.data);
       console.log(data);
       if (data.type === 'start') {
+        setChats([]);
         setOpponent(data.opponent);
         chess.reset();
         setPlayerColor(data.color);
@@ -37,7 +44,7 @@ const Game = () => {
       if (data.type === 'gameover') {
         console.log('Game Over');
       }
-      if(data.type === 'Reconnect') {
+      if (data.type === 'Reconnect') {
         setOpponent(data.opponent);
         setPlayerColor(data.color);
         setGameStarted(true);
@@ -46,8 +53,17 @@ const Game = () => {
         });
         setPosition(chess.fen());
       }
+      if (data.type === "chat") {
+        setChats((prevChats) => [...prevChats, data.message]);
+      }
     }
   }, [socket, chess]);
+
+  const chatHandler = () => {
+    socket.send(JSON.stringify({ type: 'chat', message: chat }));
+    setChats((prevChats) => [...prevChats, chat]);
+    setChat(''); 
+  }
 
   const startGame = () => {
     setGameStarted(true);
@@ -55,22 +71,21 @@ const Game = () => {
     socket.send(JSON.stringify({ type: 'create' }));
   }
 
-  const checkDrop = (from, to,promotion) => {
+  const checkDrop = (from, to, promotion) => {
     console.log(from, to, promotion);
-    if(!promotion) promotion = 'wQ';
+    if (!promotion) promotion = 'wQ';
     promotion = promotion.substring(1).toLowerCase();
-    let move = { from, to, promotion};
-    try{
+    let move = { from, to, promotion };
+    try {
       const result = chess.move(move);
-      if(result.color !== playerColor.charAt(0)){
+      if (result.color !== playerColor.charAt(0)) {
         chess.undo();
         throw new Error('Invalid Move');
       }
       
       setPosition(chess.fen());
       socket.send(JSON.stringify({ type: 'move', move: result.san }));
-    }
-    catch(e){
+    } catch (e) {
       return;
     } 
     setOptionSquares({});
@@ -108,10 +123,10 @@ const Game = () => {
 
   return (
     <div>
-    {opponent!==null && <h2>Opponent: {opponent.name} rating:{opponent.rating}</h2>}
+      {opponent !== null && <h2>Opponent: {opponent.mail}</h2>}
       <header>
         <h1>React Chessboard</h1>
-        <div className="board" style={{"width":"30%"}}>
+        <div className="board" style={{ width: "30%" }}>
           <Chessboard
             id="BasicBoard"
             position={position}
@@ -126,6 +141,13 @@ const Game = () => {
         </div>
       </header>
       <button onClick={startGame} disabled={gameStarted}>Play</button>
+      <div>
+        {chats.map((chat, index) => (
+          <p key={index}>{chat}</p>
+        ))}
+      </div>
+      <input type="text" value={chat} onChange={(e) => setChat(e.target.value)} />
+      <button onClick={chatHandler}>Send</button>
     </div>
   );
 };
