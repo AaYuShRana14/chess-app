@@ -1,4 +1,5 @@
 const Chess = require('chess.js').Chess;
+const axios = require('axios');
 class Game {
     constructor(p1, p2) {
         this.p1=p1;
@@ -6,14 +7,13 @@ class Game {
         this.player1 = p1.socket;
         this.player2 = p2.socket;
         this.board = new Chess();
-        this.moves = [];
         this.player1Time = 10 * 60 * 1000;
         this.player2Time = 10 * 60 * 1000;
         this.lastMoveTime = Date.now();
         this.totalMoves = 0;
         this.moveTimeout = null;
-        this.player1.send(JSON.stringify({ type: 'start', color: 'white',opponent:{mail:p2.email,name:p2.name,rating:p2.rating}}));
-        this.player2.send(JSON.stringify({ type: 'start', color: 'black' ,opponent:{mail:p1.email,name:p1.name,rating:p1.rating}}));
+        this.player1.send(JSON.stringify({ type: 'start', color: 'white',opponent:{mail:p2.email,id:p2.id}}));
+        this.player2.send(JSON.stringify({ type: 'start', color: 'black' ,opponent:{mail:p1.email,id:p1.id}}));
     }
 
     makemove(player, move) {
@@ -26,18 +26,18 @@ class Game {
         try {
             this.board.move(move);
             this.totalMoves++;
-            this.moves.push(move);
         } catch (e) {
             return;
         }
         if (this.board.isGameOver()) {
             const winner = this.board.turn() === 'w' ? 'black' : 'white';
-            console.log(this.moves);
             this.player1.send(JSON.stringify({ type: 'gameover', winner }));
             this.player2.send(JSON.stringify({ type: 'gameover', winner }));
+            axios.put('http://localhost:8000/game/update').then((res) => {
+                console.log(res.data);
+            });
             return;
         }
-        
         const message = JSON.stringify({ type: 'move', move });
         if (this.totalMoves % 2 === 0) {
             this.player1.send(message);

@@ -1,4 +1,5 @@
 const Game = require("./Game.js");
+const updateStatus = require("./updateStatus.js");
 class GameManager {
   #games;
   #pendingUser;
@@ -22,8 +23,7 @@ class GameManager {
             color: "white",
             opponent: {
               mail: game.p2.email,
-              name: game.p2.name,
-              rating: game.p2.rating,
+              id: game.p2.id
             },
             moves: game.board.history(),
           })
@@ -39,8 +39,7 @@ class GameManager {
             color: "black",
             opponent: {
               mail: game.p1.email,
-              name: game.p1.name,
-              rating: game.p1.rating,
+              id: game.p1.id
             },
             moves: game.board.history(),
           })
@@ -73,19 +72,20 @@ class GameManager {
         if (game.player1 === socket) {
           game.player2.send(JSON.stringify({ type: "Win" }));
           game.player2.close();
+          updateStatus(game.p2.id,game.p1.id,"win",game.board.history(),process.env.PASS_KEY);
         } else {
           game.player1.send(JSON.stringify({ type: "Win" }));
           game.player1.close();
+          updateStatus(game.p1.id,game.p2.id,"win",game.board.history(),process.env.PASS_KEY);
         }
         this.#games = this.#games.filter((g) => g !== game);
       }
-    }, 20000);
+    }, 200);
   }
   addHandler(player) {
     const socket = player.socket;
     socket.on("message", (message) => {
       message = JSON.parse(message);
-      console.log(message);
       if (message.type === "create") {
         if (this.#pendingUser && this.#pendingUser.email !== player.email) {
           const game = new Game(this.#pendingUser, player);
@@ -106,7 +106,6 @@ class GameManager {
           (game) => game.player1 === socket || game.player2 === socket
         );
         if (game) {
-            console.log(game.p1.id, " ", game.p2.id, " ", player.id);
             clearTimeout(game.moveTimeout);
             const elapsedTime = Date.now() - game.lastMoveTime;
             if (game.totalMoves % 2 === 0) {
@@ -139,8 +138,18 @@ class GameManager {
                 game.player2.send(JSON.stringify({ type: "gameover", winner }));
             }, time, game);
         }
-        else {
-            console.log(player.id);
+      }
+      const game = this.#games.find(
+        (game) => game.player1 === socket || game.player2 === socket
+      );
+      if(game){
+        if(message.type=="chat"){
+          if(game.player1==socket){
+            game.player2.send(JSON.stringify({type:"chat",message:message.message}));
+          }
+          else{
+            game.player1.send(JSON.stringify({type:"chat",message:message.message}));
+          }
         }
       }
     });
