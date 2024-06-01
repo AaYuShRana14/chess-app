@@ -7,7 +7,6 @@ const Auth = (token) => {
     }
     try{
         const user=jwt.verify(token,jwtsecret);
-        console.log(user);
         return user;    
     }
     catch(err){

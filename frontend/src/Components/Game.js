@@ -72,7 +72,6 @@ const Game = () => {
   }
 
   const checkDrop = (from, to, promotion) => {
-    console.log(from, to, promotion);
     if (!promotion) promotion = 'wQ';
     promotion = promotion.substring(1).toLowerCase();
     let move = { from, to, promotion };
