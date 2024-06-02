@@ -5,15 +5,7 @@ const wss = new WebSocketServer({ port: 8080 });
 const gameManager = new GameManager();
 const Auth = require('./Auth');
 const url = require('url');
-const mongoose = require('mongoose');
 require('dotenv').config();
-const DATABASE_URL = process.env.DATABASE_URL;
-
-mongoose.connect(DATABASE_URL, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-}).then(() => { console.log("Connected to database") }).catch((err) => { console.log(err) });
-
 wss.on('connection', async(ws, req) => {
     console.log('Connected');
     const queryParams = url.parse(req.url, true).query;
@@ -24,8 +16,8 @@ wss.on('connection', async(ws, req) => {
     }
     const user= Auth(token);
     const userEmail = user.email;
-    const player = new Player(ws, userEmail);
-    await player.init();
+    const id=user.id;
+    const player = new Player(ws, userEmail,id);
     gameManager.addUser(player);
     ws.on('close', () => {
         console.log('Disconnected');
