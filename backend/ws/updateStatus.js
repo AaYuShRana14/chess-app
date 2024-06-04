@@ -1,10 +1,11 @@
 const axios = require('axios');
 
-const updateStatus = async (winner,loser,verdict,moves,passkey) => {
+const updateStatus = async (whiteid,blackid,winnerid,verdict,moves,passkey) => {
   try {
     const response = await axios.put('http://localhost:8000/game/update', {
-        winnerid:winner,
-        loserid:loser,
+        whiteid,
+        blackid,
+        winnerid,
         verdict,
         moves,
         passkey

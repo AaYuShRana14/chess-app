@@ -71,15 +71,15 @@ class GameManager {
         if (game.player1 === socket) {
           game.player2.send(JSON.stringify({ type: "gameover", winner: "black" }));
           game.player2.close();
-          updateStatus(game.p2.id,game.p1.id,"win",game.board.history(),process.env.PASS_KEY);
+          updateStatus(game.p1.id,game.p2.id,game.p2.id,"win",game.board.history(),process.env.PASS_KEY);
         } else {
           game.player1.send(JSON.stringify({ type: "gameover", winner: "white"}));
           game.player1.close();
-          updateStatus(game.p1.id,game.p2.id,"win",game.board.history(),process.env.PASS_KEY);
+          updateStatus(game.p1.id,game.p2.id,game.p1.id,"win",game.board.history(),process.env.PASS_KEY);
         }
         this.#games = this.#games.filter((g) => g !== game);
       }
-    }, 20000);
+    }, 200);
   }
   addHandler(player) {
     const socket = player.socket;
@@ -95,8 +95,7 @@ class GameManager {
             game.player1.send(JSON.stringify({ type: "gameover", winner }));
             game.player2.send(JSON.stringify({ type: "gameover", winner }));
             const winnerid=winner==="white"?game.p1.id:game.p2.id;
-            const loserid=winner==="white"?game.p2.id:game.p1.id;
-            updateStatus(winnerid,loserid,"win",game.board.history(),process.env.PASS_KEY);
+            updateStatus(game.p1.id,game.p2.id,winnerid,"win",game.board.history(),process.env.PASS_KEY);
           }, game.player1Time, game);
           this.#pendingUser = null;
         } else {
@@ -115,7 +114,7 @@ class GameManager {
                 if(game.player1Time <= 0){
                     game.player2.send(JSON.stringify({ type: 'gameover', winner: 'black' }));
                     game.player1.send(JSON.stringify({ type: 'gameover', winner: 'black' }));
-                    updateStatus(game.p2.id,game.p1.id,"win",game.board.history(),process.env.PASS_KEY);
+                    updateStatus(game.p1.id,game.p2.id,game.p2.id,"win",game.board.history(),process.env.PASS_KEY);
                     game.player2.close();
                     game.player1.close();
                     this.#games = this.#games.filter((g) => g !== game);
@@ -126,7 +125,7 @@ class GameManager {
                 if(game.player2Time <= 0){
                     game.player2.send(JSON.stringify({ type: 'gameover', winner: 'white' }));
                     game.player1.send(JSON.stringify({ type: 'gameover', winner: 'white' }));
-                    updateStatus(game.p1.id,game.p2.id,"win",game.board.history(),process.env.PASS_KEY);
+                    updateStatus(game.p1.id,game.p2.id,game.p1.id,"win",game.board.history(),process.env.PASS_KEY);
                     game.player2.close();
                     game.player1.close();
                     this.#games = this.#games.filter((g) => g !== game);
@@ -141,8 +140,7 @@ class GameManager {
                 game.player1.send(JSON.stringify({ type: "gameover", winner }));
                 game.player2.send(JSON.stringify({ type: "gameover", winner }));
                 const winnerid=winner==="white"?game.p1.id:game.p2.id;
-                const loserid=winner==="white"?game.p2.id:game.p1.id;
-                updateStatus(winnerid,loserid,"win",game.board.history(),process.env.PASS_KEY);
+                updateStatus(game.p1.id,game.p2.id,winnerid,"win",game.board.history(),process.env.PASS_KEY);
             }, time, game);
         }
       }
