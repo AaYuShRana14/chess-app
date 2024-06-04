@@ -22,6 +22,15 @@ const Game2 = () => {
   };
 
   useEffect(() => {
+    console.log(moves);
+    if(moves) {
+      playerRef1.current.toggle();
+      playerRef2.current.toggle();
+    }
+  }, [moves]);
+
+
+  useEffect(() => {
     if (startTimer) {
       if(playerColor === "white") {
         playerRef2.current.start();

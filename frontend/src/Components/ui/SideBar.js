@@ -115,6 +115,7 @@ export const SideBar = (props) => {
         {tab === "play" && isPlaying && (
           <Moves moves={props.moves}/>
         )}
+        {/* {tab === "history" && <History />} */}
       </div>
     </div>
   );

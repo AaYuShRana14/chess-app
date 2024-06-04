@@ -39,6 +39,7 @@ const Player = forwardRef((props, ref) => {
     setTime: (time) => setTimeLeft(time),
     start: () => setIsRunning(true),
     stop: () => setIsRunning(false),
+    toggle: () => setIsRunning((prev) => !prev)
   }));
 
   return (
