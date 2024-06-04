@@ -69,11 +69,11 @@ class GameManager {
       );
       if (game) {
         if (game.player1 === socket) {
-          game.player2.send(JSON.stringify({ type: "Win" }));
+          game.player2.send(JSON.stringify({ type: "gameover", winner: "black" }));
           game.player2.close();
           updateStatus(game.p2.id,game.p1.id,"win",game.board.history(),process.env.PASS_KEY);
         } else {
-          game.player1.send(JSON.stringify({ type: "Win" }));
+          game.player1.send(JSON.stringify({ type: "gameover", winner: "white"}));
           game.player1.close();
           updateStatus(game.p1.id,game.p2.id,"win",game.board.history(),process.env.PASS_KEY);
         }
