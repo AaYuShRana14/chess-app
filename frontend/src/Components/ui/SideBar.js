@@ -12,8 +12,12 @@ export const SideBar = (props) => {
   };
 
   useEffect(() => {
-    if (isPlaying) props.isPlaying(selectedValue);
-  }, [isPlaying]);
+    console.log(isPlaying)
+    if(!isPlaying && props.isStarted) {
+      console.log('hi');
+      setIsPlaying(true);
+    }
+  }, [props.startTimer]);
 
   return (
     <div className="sidebar">
@@ -60,6 +64,7 @@ export const SideBar = (props) => {
             <button
               onClick={() => {
                 setIsPlaying(true);
+                props.isPlaying(selectedValue);
               }}
             >
               <svg
@@ -107,16 +112,27 @@ export const SideBar = (props) => {
             </button>
           </div>
         )}
-        {/* {tab === "play" && isPlaying && (
-          <div className="movesContainer">
-          {
-            props.moves.map((move, index) => (
-              <p key={index}>{move}</p>
-            ))
-          }
-        </div>
-        )} */}
+        {tab === "play" && isPlaying && (
+          <Moves moves={props.moves}/>
+        )}
       </div>
     </div>
   );
 };
+
+const Moves = ({moves}) => {
+  const arr = [];
+  if(!moves || moves.length === 0) return (<div className="moves-error"><p>No Moves To Display</p></div>)
+  let x = 1;
+  for (let i = 0; i < 10; i+=2) {
+    arr.push(<p>{x++} <span>{moves[i]}</span> <span>{moves[i+1]}</span></p>);
+  }
+  if(moves.length % 2 === 1) {
+    arr.push(<p>{x++} <span>{moves[moves.length-1]}</span></p>);
+  }
+  return (
+    <div className="movesContainer">
+      {arr}
+    </div>
+  );
+}

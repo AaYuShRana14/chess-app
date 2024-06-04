@@ -5,7 +5,7 @@ import axios from "axios";
 import { useState, useEffect, useRef } from "react";
 import { GameHandler } from "../hooks/GameHandler.js";
 
-const Game2 = (props) => {
+const Game2 = () => {
   const playerRef1 = useRef(null);
   const playerRef2 = useRef(null);
   const [me, setMe] = useState({
@@ -69,7 +69,7 @@ const Game2 = (props) => {
           highlightSquares={highlightSquares}
           squareClick={squareClick}
         />
-        <SideBar isPlaying={playHandler} gameover={gameover} moves={moves}/>
+        <SideBar isStarted={startTimer} isPlaying={playHandler} gameover={gameover} moves={moves}/>
       </div>
     </div>
   );
