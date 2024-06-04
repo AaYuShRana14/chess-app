@@ -177,6 +177,7 @@ export const GameHandler = () => {
     squareClick,
     startTimer,
     setStartTimer,
-    gameover
+    gameover,
+    moves
   };
 };
