@@ -1,22 +1,25 @@
 import { Chessboard } from "react-chessboard";
-import { Chess } from "chess.js";
 import "./Board.css";
+import Player from "./Player.js";
+
 export const Board = (props) => {
-  
   return (
-    <>
-    <div className="opponent">
-        <div>
-        <img src={props.opponent.img} alt="Opponent" />
-        <p>{props.opponent.name} &nbsp; {props.opponent.rating}</p>
-        </div>
-        <div>
-            
-        </div>
-    </div>
+    <div className="totalboard">
+      <Player player={props.opponent} ref={props.playerRef1} />
       <div className="board">
-        <Chessboard id="BasicBoard" position={props.fen} />
+        <Chessboard
+          id="BasicBoard"
+          position={props.position}
+          onPieceDrop={props.checkDrop}
+          showBoardNotation={true}
+          animationDuration={0}
+          onSquareClick={props.squareClick}
+          customSquareStyles={props.optionSquares}
+          boardOrientation={props.playerColor}
+          onPieceDragBegin={(piece, square) => props.highlightSquares(square)}
+        />
       </div>
-    </>
+      <Player player={props.me} ref={props.playerRef2} />
+    </div>
   );
 };
