@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState} from "react";
 import "./SideBar.css";
+import axios from 'axios';
 export const SideBar = (props) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [tab, setTab] = useState("play");
@@ -115,7 +116,56 @@ export const SideBar = (props) => {
         {tab === "play" && isPlaying && (
           <Moves moves={props.moves}/>
         )}
-        {/* {tab === "history" && <History />} */}
+        {tab === "history" && (
+          <History history={props.history} />
+        )}
+      </div>
+    </div>
+  );
+};
+const History = () => {
+  const [historyData, setHistoryData] = useState([]);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchHistory = async () => {
+      try {
+        const res = await axios.get('http://localhost:8000/profile/games', {
+          headers: {
+            "Authorization": "Bearer " + localStorage.getItem("chess-app-token"),
+          }
+        });
+        setHistoryData(res.data);
+        console.log(res.data);
+      } catch (err) {
+        setError(err);
+      }
+    };
+    fetchHistory();
+  }, []);
+  if (error) {
+    return <div className="error">Failed to fetch history: {error.message}</div>;
+  }
+
+  return (
+    <div className="history">
+      <div className="history-header">
+        <p>Sl.No</p>
+        <p>White</p>
+        <p>Black</p>
+      </div>
+      <div className="history-content">
+        {historyData.length > 0 ? (
+          historyData.map((game, index) => (
+            <div key={index} className="history-item">
+              <p>{index + 1}</p>
+              <p>{game.whitePlayer}</p>
+              <p>{game.blackPlayer}</p>
+            </div>
+          ))
+        ) : (
+          <p>No games found</p>
+        )}
       </div>
     </div>
   );
