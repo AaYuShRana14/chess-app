@@ -26,7 +26,7 @@ export const GameHandler = () => {
     window.location.href = "/signin";
   }
 
-  const socket = useSocket();
+  let socket = useSocket();
 
   useEffect(() => {
     if (localStorage.getItem("chess-app-token") === null) {
@@ -87,7 +87,13 @@ export const GameHandler = () => {
   }, [socket, chess]);
 
   const chatHandler = () => {
-    socket.send(JSON.stringify({ type: "chat", message: chat }));
+    if (socket) {
+      socket.send(JSON.stringify({ type: "chat", message: chat }));
+    } else {
+      setTimeout(() => {
+        socket.send(JSON.stringify({ type: "chat", message: chat }));
+      }, 500);
+    }
     setChats((prevChats) => [...prevChats, chat]);
     setChat("");
   };
@@ -95,7 +101,19 @@ export const GameHandler = () => {
   const startGame = () => {
     setGameStarted(true);
     console.log("start");
-    socket.send(JSON.stringify({ type: "create" }));
+    chess.reset();
+    setMoves([]);
+    setPosition(chess.fen());
+    setGameover(false);
+    setStartTimer(false);
+    if (socket) {
+      socket.send(JSON.stringify({ type: "create" }));
+    } else {
+      console.log("trying to reconnect")
+      setTimeout(() => {
+        socket.send(JSON.stringify({ type: "create" }));
+      }, 500);
+    }
   };
 
   const checkDrop = (from, to, promotion) => {
@@ -110,7 +128,13 @@ export const GameHandler = () => {
       }
 
       setPosition(chess.fen());
-      socket.send(JSON.stringify({ type: "move", move: result.san }));
+      if (socket) {
+        socket.send(JSON.stringify({ type: "move", move: result.san }));
+      } else {
+        setTimeout(() => {
+          socket.send(JSON.stringify({ type: "move", move: result.san }));
+        }, 500);
+      }
     } catch (e) {
       setOptionSquares({});
       return false;
@@ -178,6 +202,6 @@ export const GameHandler = () => {
     startTimer,
     setStartTimer,
     gameover,
-    moves
+    moves,
   };
 };

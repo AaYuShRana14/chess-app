@@ -26,6 +26,7 @@
 }
 
 .content {
+  position: relative;
   height: 100%;
 }
 
@@ -176,39 +177,75 @@
     min-height: 15rem;
     padding: 2rem 0;
   }
+  .movesContainer {
+    margin: 5px 0;
+  }
 }
 
-/* CSS */
+.gameover {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  p {
+    font-size: 2rem;
+    font-weight: 800;
+    background: #F0B7A1;
+background: linear-gradient(to right, #f0c402  0%, #80ff00 50%, #80ff00 51%, #f0c402  100%);
+-webkit-background-clip: text;
+-webkit-text-fill-color: transparent;
+  }
+}
+
+
 .movesContainer {
-  background-color: #f9f9f9; /* Light grey background */
-  border: 1px solid #ddd; /* Light grey border */
-  border-radius: 8px; /* Rounded corners */
-  padding: 16px; /* Spacing inside the container */
-  max-width: 600px; /* Maximum width of the container */
-  margin: 20px auto; /* Center the container */
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* Light shadow */
-  
+  overflow-y: auto;
+  max-height: 34vw;
+  background-color: #f9f9f9; 
+  border: 1px solid #ddd; 
+  border-radius: 8px; 
+  padding: 8px; 
+  max-width: 600px; 
+  margin: 10px auto;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1); 
+}
+
+.movesContainer::-webkit-scrollbar {
+  width: 5px; 
+}
+
+.movesContainer::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 6px rgba(105, 105, 105, 0.3);
+}
+ 
+.movesContainer::-webkit-scrollbar-thumb {
+  background-color: darkgrey;
+  outline: 1px solid slategrey;
 }
 
 .movesTable {
   width: 100%;
-  border-collapse: collapse; /* Remove space between table cells */
+  border-collapse: collapse; 
 }
 
 .movesTable th, .movesTable td {
-  border: 1px solid #ddd; /* Light grey border for cells */
-  padding: 8px; /* Padding inside cells */
-  text-align: left; /* Left align text */
+  padding: 8px;
+  text-align: left; 
 }
 
 .movesTable th {
-  background-color: #f2f2f2; /* Light grey background for header */
-  color: #333; /* Dark grey text color */
-  font-weight: bold; /* Bold text */
+  background-color: #f2f2f2;
+  color: #333;
+  font-weight: bold;
+}
+.movesTable td {
+  font-weight: 600;
+  color: #3a3939;
 }
 
-.movesTable td {
-  color: #333; /* Dark grey text color */
+.movesTable tr:nth-child(even) {
+  background-color: #f2f2f2; 
 }
 
 .banter-container {
