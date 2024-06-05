@@ -49,7 +49,7 @@ import {
         try {
           const response = await axios.post("http://localhost:8000/login", { email, password });
           localStorage.setItem("chess-app-token", response.data.token);
-          navigate("/game");
+          navigate("/");
           setFormError("");
         } catch (error) {
           if (error.response.data.msg==="Invalid credentials") {

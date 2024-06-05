@@ -1,7 +1,6 @@
 import "./App.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Game from "./Components/Game";
-import Game2 from "./Components/Game2";
 import AuthRedirect from "./Components/AuthRedirect";
 import Signup from "./Components/Signup";
 import Signin from "./Components/Signin";
@@ -16,8 +15,7 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Home></Home>} />
-        <Route path="/game" element={<Game />} />
-        <Route path="/game2" element={<Game2/>}></Route>
+        <Route path="/game" element={<Game></Game>} />
         <Route path="/profile/:id" element={<Profile></Profile>}></Route>
         <Route path="/signup" element={<Signup />} />
         <Route path="/signin" element={<Signin />} />
