@@ -145,7 +145,6 @@ const History = () => {
           },
         });
         setHistoryData(res.data);
-        console.log(res.data);
       } catch (err) {
         setError(err);
       }
@@ -160,18 +159,20 @@ const History = () => {
 
   return (
     <div className="history">
-      <div className="history-header">
-        <p>Sl.No</p>
+      <div className="history-header">   
+      <p>S.no</p>
         <p>White</p>
         <p>Black</p>
+        <p>Winner</p>
       </div>
       <div className="history-content">
         {historyData.length > 0 ? (
           historyData.map((game, index) => (
             <div key={index} className="history-item">
               <p>{index + 1}</p>
-              <p>{game.whitePlayer}</p>
-              <p>{game.blackPlayer}</p>
+              <p>{game.white}</p>
+              <p>{game.black}</p>
+              <p>{game.winner}</p>
             </div>
           ))
         ) : (
