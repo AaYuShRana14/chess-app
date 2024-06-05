@@ -2,19 +2,19 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const matchSchema = new Schema({
-    winner: {
+    white: {
         type: Schema.Types.ObjectId,
         ref: 'User',
         required: true
     },
-    loser: {
+    black: {
         type: Schema.Types.ObjectId,
         ref: 'User',
         required: true
     },
     verdict: {
         type: String,
-        enum: ['win', 'loss', 'draw'],
+        enum: ['white', 'black', 'draw'],
         required: true
     },
     moves: {
