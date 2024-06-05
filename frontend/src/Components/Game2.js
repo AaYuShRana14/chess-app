@@ -31,8 +31,6 @@ const Game2 = () => {
     setGameStarted,
     chats,
     setChats,
-    chat,
-    setChat,
     opponent,
     setOpponent,
     chatHandler,
@@ -43,6 +41,10 @@ const Game2 = () => {
     startTimer,
     setStartTimer,
   } = GameHandler();
+
+  const chatSend = (message) => {
+    chatHandler(message);
+  }
 
   useEffect(() => {
     if(gameover) {
@@ -124,7 +126,8 @@ const Game2 = () => {
           isPlaying={playHandler}
           gameover={gameover}
           moves={moves}
-          chat={chat}
+          chats={chats}
+          chatSend={chatSend}
         />
       </div>
     </div>
