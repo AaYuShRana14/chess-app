@@ -14,7 +14,6 @@ export const GameHandler = () => {
   const [gameStarted, setGameStarted] = useState(false);
   const [chats, setChats] = useState([]);
   const [startTimer, setStartTimer] = useState(false);
-  const [chat, setChat] = useState("");
   const [gameover, setGameover] = useState(false);
   const [opponent, setOpponent] = useState({
     name: "Opponent",
@@ -81,21 +80,20 @@ export const GameHandler = () => {
         setMoves(chess.history());
       }
       if (data.type === "chat") {
-        setChats((prevChats) => [...prevChats, data.message]);
+        setChats((prevChats) => [...prevChats, { message: data.message, sender: "Opponent" }]);
       }
     };
   }, [socket, chess]);
 
-  const chatHandler = () => {
+  const chatHandler = (message) => {
     if (socket) {
-      socket.send(JSON.stringify({ type: "chat", message: chat }));
+      socket.send(JSON.stringify({ type: "chat", message }));
     } else {
       setTimeout(() => {
-        socket.send(JSON.stringify({ type: "chat", message: chat }));
+        socket.send(JSON.stringify({ type: "chat", message }));
       }, 500);
     }
-    setChats((prevChats) => [...prevChats, chat]);
-    setChat("");
+    setChats((prevChats) => [...prevChats, { message, sender: "Me" }]);
   };
 
   const startGame = () => {
@@ -190,8 +188,6 @@ export const GameHandler = () => {
     setGameStarted,
     chats,
     setChats,
-    chat,
-    setChat,
     opponent,
     setOpponent,
     chatHandler,
