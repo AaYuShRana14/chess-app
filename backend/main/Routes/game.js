@@ -38,14 +38,16 @@ router.put('/update', async (req, res) => {
     black.totalMatches++;
     if (verdict === 'win') {
         if (winnerid === whiteid) {
-            white.wins++;
-            black.losses++;
+            white.totalWins++;
+            black.totalLosses++;
         }
         else {
-            black.wins++;
-            white.losses++;
+            black.totalWins++;
+            white.totalLosses++;
         }
     }
+    await white.save();
+    await black.save();
     let winner=null;
     let loser=null;
     if (winnerid === whiteid) {
