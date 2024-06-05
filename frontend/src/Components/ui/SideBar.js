@@ -13,12 +13,10 @@ export const SideBar = (props) => {
   };
 
   useEffect(() => {
-    console.log(isPlaying)
-    if(!isPlaying && props.isStarted) {
-      console.log('hi');
+    if (!isPlaying && props.isStarted) {
       setIsPlaying(true);
     }
-  }, [props.startTimer]);
+  }, [props.isStarted]);
 
   return (
     <div className="sidebar">
@@ -171,19 +169,48 @@ const History = () => {
   );
 };
 
-const Moves = ({moves}) => {
-  const arr = [];
-  if(!moves || moves.length === 0) return (<div className="moves-error"><p>No Moves To Display</p></div>)
+const Moves = ({ moves }) => {
+  const rows = [];
+  if (!moves || moves.length === 0)
+    return (
+      <div className="banter-container">
+        <div class="banter-loader">
+          <div class="banter-loader__box"></div>
+          <div class="banter-loader__box"></div>
+          <div class="banter-loader__box"></div>
+          <div class="banter-loader__box"></div>
+          <div class="banter-loader__box"></div>
+          <div class="banter-loader__box"></div>
+          <div class="banter-loader__box"></div>
+          <div class="banter-loader__box"></div>
+          <div class="banter-loader__box"></div>
+        </div>
+      </div>
+    );
   let x = 1;
-  for (let i = 0; i < 10; i+=2) {
-    arr.push(<p>{x++} <span>{moves[i]}</span> <span>{moves[i+1]}</span></p>);
-  }
-  if(moves.length % 2 === 1) {
-    arr.push(<p>{x++} <span>{moves[moves.length-1]}</span></p>);
+  for (let i = 0; i < moves.length; i += 2) {
+    rows.push(
+      <tr key={i}>
+        <td>{x++}</td>
+        <td>{moves[i]}</td>
+        <td>{moves[i + 1]}</td>
+      </tr>
+    );
   }
   return (
     <div className="movesContainer">
-      {arr}
+      <table className="movesTable">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>White</th>
+            <th>Black</th>
+          </tr>
+        </thead>
+        <tbody>
+          {rows}
+        </tbody>
+      </table>
     </div>
   );
-}
+};
