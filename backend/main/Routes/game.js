@@ -7,7 +7,7 @@ const K_FACTOR = 32;
 const expectedScore = (ratingA, ratingB) => {
     return 1 / (1 + Math.pow(10, (ratingB - ratingA) / 400));
 };
-const updateRating = (winnerRating, loserRating,verdict) => {
+const updateRating = (winnerRating, loserRating, verdict) => {
     const expectedWin = expectedScore(winnerRating, loserRating);
     const expectedLoss = expectedScore(loserRating, winnerRating);
     let updatedWinnerRating = 0;
@@ -27,26 +27,51 @@ const updateRating = (winnerRating, loserRating,verdict) => {
 };
 
 router.put('/update', async (req, res) => {
-    const { winnerid, loserid, verdict, passkey, moves } = req.body;
+    const { whiteid, blackid, winnerid, verdict, passkey, moves } = req.body;
     if (passkey !== process.env.PASS_KEY) {
         res.status(401).send('Unauthorized');
         return;
     }
-    const winner = await user.findById(winnerid);
-    const loser = await user.findById(loserid);
-    winner.totalMatches++;
-    loser.totalMatches++;
+    const white = await user.findById(whiteid);
+    const black = await user.findById(blackid);
+    white.totalMatches++;
+    black.totalMatches++;
     if (verdict === 'win') {
-        winner.totalWins++;
-        loser.totalLosses++;
+        if (winnerid === whiteid) {
+            white.wins++;
+            black.losses++;
+        }
+        else {
+            black.wins++;
+            white.losses++;
+        }
+    }
+    let winner=null;
+    let loser=null;
+    if (winnerid === whiteid) {
+        winner = await user.findById(whiteid);
+        loser = await user.findById(blackid);
+    }
+    else if (winnerid === blackid) {
+        winner = await user.findById(blackid);
+        loser = await user.findById(whiteid);
     }
     const { winnerRating, loserRating } = updateRating(winner.rating, loser.rating, verdict);
     winner.rating = winnerRating;
     loser.rating = loserRating;
-    const match=new Match({
-        winner:winner._id,
-        loser:loser._id,
-        verdict,
+    let ver=verdict;
+    if(verdict!=='draw'){
+        if(winnerid===whiteid){
+            ver="white";
+        }
+        else{
+            ver="black";
+        }
+    }
+    const match = new Match({
+        white: whiteid,
+        black: blackid,
+        verdict:ver,
         moves
     });
     winner.matches.push(match);
