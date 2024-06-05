@@ -20,6 +20,7 @@ app.use('/oauth',require('./Routes/oauth'));
 app.use('/updateProfile',require('./Routes/updateProfile'));
 app.use('/forgot-password',require('./Routes/forgotPassword'));
 app.use('/reset-password',require('./Routes/resetPassword'));
+app.use('/game',require('./Routes/game'));
 app.listen(8000,()=>{
-    console.log('Server started on http://localhost:8000');
+    console.log('Server started on https://chess-app-opin.onrender.com');
 });
