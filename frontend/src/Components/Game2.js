@@ -2,12 +2,15 @@ import { Board } from "./ui/Board.js";
 import { SideBar } from "./ui/SideBar.js";
 import "./Game2.css";
 import axios from "axios";
+import Confetti from 'react-confetti'
 import { useState, useEffect, useRef } from "react";
 import { GameHandler } from "../hooks/GameHandler.js";
 
 const Game2 = () => {
+  const { innerWidth: width, innerHeight: height } = window;
   const playerRef1 = useRef(null);
   const playerRef2 = useRef(null);
+  const [confetti, setConfetti] = useState(false);
   const [me, setMe] = useState({
     name: "Me",
     rating: 1500,
@@ -41,6 +44,18 @@ const Game2 = () => {
     setStartTimer,
   } = GameHandler();
 
+  useEffect(() => {
+    if(gameover) {
+      setStartTimer(false);
+      if(gameover===playerColor) {
+        setConfetti(true);
+        setTimeout(() => {
+          setConfetti(false);
+        }, 5000);
+      }
+    }
+  }, [gameover])
+
   const playHandler = (t) => {
     startGame();
     playerRef1.current.setTime(t);
@@ -48,7 +63,7 @@ const Game2 = () => {
   };
 
   useEffect(() => {
-    if (moves) {
+    if (moves && startTimer) {
       playerRef1.current.toggle();
       playerRef2.current.toggle();
     }
@@ -90,6 +105,7 @@ const Game2 = () => {
 
   return (
     <div className="main">
+      {confetti && <Confetti width={width} height={height}/>}
       <div className="sub-main">
         <Board
           me={me}
@@ -108,6 +124,7 @@ const Game2 = () => {
           isPlaying={playHandler}
           gameover={gameover}
           moves={moves}
+          chat={chat}
         />
       </div>
     </div>

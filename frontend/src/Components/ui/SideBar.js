@@ -1,6 +1,6 @@
-import React, { useEffect, useState} from "react";
+import React, { useEffect, useState, useRef } from "react";
 import "./SideBar.css";
-import axios from 'axios';
+import axios from "axios";
 export const SideBar = (props) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [tab, setTab] = useState("play");
@@ -13,10 +13,16 @@ export const SideBar = (props) => {
   };
 
   useEffect(() => {
+    if (props.gameover) {
+      setTimeout(() => setIsPlaying(false), 8000);
+    }
+  }, [props.gameover]);
+
+  useEffect(() => {
     if (!isPlaying && props.isStarted) {
       setIsPlaying(true);
     }
-  }, [props.isStarted]);
+  }, [props.isStarted, isPlaying]);
 
   return (
     <div className="sidebar">
@@ -111,12 +117,17 @@ export const SideBar = (props) => {
             </button>
           </div>
         )}
-        {tab === "play" && isPlaying && (
-          <Moves moves={props.moves}/>
+        {tab === "play" &&
+          isPlaying &&
+          props.gameover === false && (<Moves moves={props.moves} />)}
+        {tab === "play" && isPlaying && props.gameover !== false && (
+          <div className="gameover">
+            {props.gameover === "draw" && <p>Game Draw</p>}
+            {props.gameover === "white" && <p>White Wins</p>}
+            {props.gameover === "black" && <p>Black Wins</p>}
+          </div>
         )}
-        {tab === "history" && (
-          <History history={props.history} />
-        )}
+        {tab === "history" && <History history={props.history} />}
       </div>
     </div>
   );
@@ -128,10 +139,10 @@ const History = () => {
   useEffect(() => {
     const fetchHistory = async () => {
       try {
-        const res = await axios.get('http://localhost:8000/profile/games', {
+        const res = await axios.get("http://localhost:8000/profile/games", {
           headers: {
-            "Authorization": "Bearer " + localStorage.getItem("chess-app-token"),
-          }
+            Authorization: "Bearer " + localStorage.getItem("chess-app-token"),
+          },
         });
         setHistoryData(res.data);
         console.log(res.data);
@@ -142,7 +153,9 @@ const History = () => {
     fetchHistory();
   }, []);
   if (error) {
-    return <div className="error">Failed to fetch history: {error.message}</div>;
+    return (
+      <div className="error">Failed to fetch history: {error.message}</div>
+    );
   }
 
   return (
@@ -170,6 +183,12 @@ const History = () => {
 };
 
 const Moves = ({ moves }) => {
+  const containerRef = useRef(null);
+  useEffect(() => {
+    if (containerRef.current) {
+      containerRef.current.scrollTop = containerRef.current.scrollHeight;
+    }
+  }, [moves]);
   const rows = [];
   if (!moves || moves.length === 0)
     return (
@@ -198,7 +217,7 @@ const Moves = ({ moves }) => {
     );
   }
   return (
-    <div className="movesContainer">
+    <div className="movesContainer" ref={containerRef}>
       <table className="movesTable">
         <thead>
           <tr>
@@ -207,9 +226,7 @@ const Moves = ({ moves }) => {
             <th>Black</th>
           </tr>
         </thead>
-        <tbody>
-          {rows}
-        </tbody>
+        <tbody>{rows}</tbody>
       </table>
     </div>
   );
