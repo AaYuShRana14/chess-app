@@ -117,9 +117,9 @@ export const SideBar = (props) => {
             </button>
           </div>
         )}
-        {tab === "play" &&
-          isPlaying &&
-          props.gameover === false && (<Moves moves={props.moves} />)}
+        {tab === "play" && isPlaying && props.gameover === false && (
+          <Moves moves={props.moves} />
+        )}
         {tab === "play" && isPlaying && props.gameover !== false && (
           <div className="gameover">
             {props.gameover === "draw" && <p>Game Draw</p>}
@@ -128,6 +128,9 @@ export const SideBar = (props) => {
           </div>
         )}
         {tab === "history" && <History history={props.history} />}
+        {tab === "chat" && isPlaying && (
+          <Chat chats={props.chats} chatSend={props.chatSend} />
+        )}
       </div>
     </div>
   );
@@ -159,8 +162,8 @@ const History = () => {
 
   return (
     <div className="history">
-      <div className="history-header">   
-      <p>S.no</p>
+      <div className="history-header">
+        <p>S.no</p>
         <p>White</p>
         <p>Black</p>
         <p>Winner</p>
@@ -229,6 +232,65 @@ const Moves = ({ moves }) => {
         </thead>
         <tbody>{rows}</tbody>
       </table>
+    </div>
+  );
+};
+
+const Chat = ({ chats, chatSend }) => {
+  const [message, setMessage] = useState("");
+
+  const handleSendMessage = () => {
+    if (message.trim()) {
+      chatSend(message);
+      setMessage("");
+    }
+  };
+
+  const handleKeyPress = (event) => {
+    if (event.keyCode === 13) {
+      handleSendMessage();
+    }
+  };
+
+  return (
+    <div className="chat-container">
+      <div className="chat-messages">
+        {chats.map((chat, index) => (
+          <div key={index} className={`chat-message ${chat.sender === 'Me' ? 'own-message' : 'opponent-message'}`}>
+            <span className="chat-text">{chat.message}</span>
+          </div>
+        ))}
+      </div>
+      <div class="messageBox">
+        
+        <input
+          placeholder="Message..."
+          type="text"
+          id="messageInput"
+          value={message}
+          onKeyDown={handleKeyPress}
+          onChange={(e) => setMessage(e.target.value)}
+        />
+        <button id="sendButton" onClick={handleSendMessage}>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 664 663"
+          >
+            <path
+              fill="none"
+              d="M646.293 331.888L17.7538 17.6187L155.245 331.888M646.293 331.888L17.753 646.157L155.245 331.888M646.293 331.888L318.735 330.228L155.245 331.888"
+            ></path>
+            <path
+              stroke-linejoin="round"
+              stroke-linecap="round"
+              stroke-width="33.67"
+              stroke="#6c6c6c"
+              d="M646.293 331.888L17.7538 17.6187L155.245 331.888M646.293 331.888L17.753 646.157L155.245 331.888M646.293 331.888L318.735 330.228L155.245 331.888"
+            ></path>
+          </svg>
+        </button>
+      </div>
     </div>
   );
 };
