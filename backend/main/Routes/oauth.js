@@ -7,7 +7,7 @@ require('dotenv').config();
 router.get('/', async (req, res) => {
     const code = req.query.code;
     try {
-        const redirectURL = "http://localhost:8000/oauth"
+        const redirectURL = "https://chess-app-opin.onrender.com/oauth"
         const oAuth2Client = new OAuth2Client(
             process.env.GOOGLE_CLIENT_ID,
             process.env.GOOGLE_CLIENT_SECRET,

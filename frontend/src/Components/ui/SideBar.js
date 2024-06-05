@@ -149,7 +149,7 @@ const History = ({me}) => {
   useEffect(() => {
     const fetchHistory = async () => {
       try {
-        const res = await axios.get("http://localhost:8000/profile/games", {
+        const res = await axios.get("https://chess-app-opin.onrender.com/profile/games", {
           headers: {
             Authorization: "Bearer " + localStorage.getItem("chess-app-token"),
           },
