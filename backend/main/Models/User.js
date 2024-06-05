@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
 const userSchema = new mongoose.Schema({
     name: {
         type: String,
@@ -13,7 +14,7 @@ const userSchema = new mongoose.Schema({
     handlename:{
         type: String,
         required: true,
-        unique: true
+        unique: false
     },
     password: {
         type: String,
@@ -41,6 +42,10 @@ const userSchema = new mongoose.Schema({
         type: Number,
         default: 0
     },
+    matches: [{
+        type:Schema.Types.ObjectId,
+        ref:'Match'
+    }]
 });
 const User = mongoose.model('User', userSchema);
 module.exports = User;

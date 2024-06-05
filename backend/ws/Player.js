@@ -1,13 +1,9 @@
-const User = require('./Models/User');
+
 class Player{
-    constructor(socket,email){
+    constructor(socket,email,id){
         this.socket = socket;
         this.email = email;
-    }
-    async init(){
-        const user=await User.findOne({email:this.email});
-        this.name=user.name;
-        this.rating=user.rating;
+        this.id=id;
     }
 }
 module.exports = Player;  

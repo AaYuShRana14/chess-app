@@ -1,4 +1,5 @@
 const Game = require("./Game.js");
+const updateStatus = require("./updateStatus.js");
 class GameManager {
   #games;
   #pendingUser;
@@ -22,8 +23,7 @@ class GameManager {
             color: "white",
             opponent: {
               mail: game.p2.email,
-              name: game.p2.name,
-              rating: game.p2.rating,
+              id: game.p2.id
             },
             moves: game.board.history(),
           })
@@ -39,8 +39,7 @@ class GameManager {
             color: "black",
             opponent: {
               mail: game.p1.email,
-              name: game.p1.name,
-              rating: game.p1.rating,
+              id: game.p1.id
             },
             moves: game.board.history(),
           })
@@ -49,9 +48,8 @@ class GameManager {
       }
     } else {
       this.#users.push(player);
-      this.addHandler(player);
-      console.log(this.#games.length);
     }
+    this.addHandler(player);
   }
   removeUser(player) {
     const socket = player.socket;
@@ -71,11 +69,13 @@ class GameManager {
       );
       if (game) {
         if (game.player1 === socket) {
-          game.player2.send(JSON.stringify({ type: "Win" }));
+          game.player2.send(JSON.stringify({ type: "gameover", winner: "black" }));
           game.player2.close();
+          updateStatus(game.p1.id,game.p2.id,game.p2.id,"win",game.board.history(),process.env.PASS_KEY);
         } else {
-          game.player1.send(JSON.stringify({ type: "Win" }));
+          game.player1.send(JSON.stringify({ type: "gameover", winner: "white"}));
           game.player1.close();
+          updateStatus(game.p1.id,game.p2.id,game.p1.id,"win",game.board.history(),process.env.PASS_KEY);
         }
         this.#games = this.#games.filter((g) => g !== game);
       }
@@ -94,6 +94,8 @@ class GameManager {
             const winner = game.board.turn() === "w" ? "black" : "white";
             game.player1.send(JSON.stringify({ type: "gameover", winner }));
             game.player2.send(JSON.stringify({ type: "gameover", winner }));
+            const winnerid=winner==="white"?game.p1.id:game.p2.id;
+            updateStatus(game.p1.id,game.p2.id,winnerid,"win",game.board.history(),process.env.PASS_KEY);
           }, game.player1Time, game);
           this.#pendingUser = null;
         } else {
@@ -112,6 +114,7 @@ class GameManager {
                 if(game.player1Time <= 0){
                     game.player2.send(JSON.stringify({ type: 'gameover', winner: 'black' }));
                     game.player1.send(JSON.stringify({ type: 'gameover', winner: 'black' }));
+                    updateStatus(game.p1.id,game.p2.id,game.p2.id,"win",game.board.history(),process.env.PASS_KEY);
                     game.player2.close();
                     game.player1.close();
                     this.#games = this.#games.filter((g) => g !== game);
@@ -122,6 +125,7 @@ class GameManager {
                 if(game.player2Time <= 0){
                     game.player2.send(JSON.stringify({ type: 'gameover', winner: 'white' }));
                     game.player1.send(JSON.stringify({ type: 'gameover', winner: 'white' }));
+                    updateStatus(game.p1.id,game.p2.id,game.p1.id,"win",game.board.history(),process.env.PASS_KEY);
                     game.player2.close();
                     game.player1.close();
                     this.#games = this.#games.filter((g) => g !== game);
@@ -135,7 +139,22 @@ class GameManager {
                 const winner = game.board.turn() === "w" ? "black" : "white";
                 game.player1.send(JSON.stringify({ type: "gameover", winner }));
                 game.player2.send(JSON.stringify({ type: "gameover", winner }));
+                const winnerid=winner==="white"?game.p1.id:game.p2.id;
+                updateStatus(game.p1.id,game.p2.id,winnerid,"win",game.board.history(),process.env.PASS_KEY);
             }, time, game);
+        }
+      }
+      const game = this.#games.find(
+        (game) => game.player1 === socket || game.player2 === socket
+      );
+      if(game){
+        if(message.type=="chat"){
+          if(game.player1==socket){
+            game.player2.send(JSON.stringify({type:"chat",message:message.message}));
+          }
+          else{
+            game.player1.send(JSON.stringify({type:"chat",message:message.message}));
+          }
         }
       }
     });
