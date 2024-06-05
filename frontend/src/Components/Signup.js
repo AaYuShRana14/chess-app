@@ -79,7 +79,7 @@ function Signup() {
       };
 
       try {
-        const response = await axios.post("http://localhost:8000/signup", data);
+        const response = await axios.post("https://chess-app-opin.onrender.com/signup", data);
         localStorage.setItem("chess-app-token", response.data.token);
         navigate("/");
         setErrors({});
