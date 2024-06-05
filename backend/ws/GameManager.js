@@ -79,7 +79,7 @@ class GameManager {
         }
         this.#games = this.#games.filter((g) => g !== game);
       }
-    }, 200);
+    }, 20000);
   }
   addHandler(player) {
     const socket = player.socket;
