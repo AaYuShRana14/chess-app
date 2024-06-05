@@ -167,9 +167,12 @@ export default function UpdateProfile() {
               color={'white'}
               w="full"
               _hover={{ bg: 'blue.500' }}
-              onClick={() => (window.location.href = '/')}
+              onClick={() => {
+                localStorage.removeItem('chess-app-token');
+                window.location.href = '/signin';
+              }}
             >
-              Home
+             logout
             </Button>
             <Button
               bg={'blue.400'}
@@ -178,7 +181,16 @@ export default function UpdateProfile() {
               _hover={{ bg: 'blue.500' }}
               onClick={updateHandler}
             >
-              Submit
+              Update
+            </Button>
+            <Button
+              bg={'blue.400'}
+              color={'white'}
+              w="full"
+              _hover={{ bg: 'blue.500' }}
+              onClick={() => (window.location.href = '/')}
+            >
+              Home
             </Button>
           </Stack>
         </Stack>
