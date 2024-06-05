@@ -40,7 +40,7 @@ export const SideBar = (props) => {
       <div className="content">
         {tab === "play" && !isPlaying && (
           <div className="play">
-            <div class="radio-input">
+            <div className="radio-input">
               <input
                 value="value-1"
                 name="value-radio"
@@ -48,7 +48,7 @@ export const SideBar = (props) => {
                 type="radio"
                 onChange={handleChange}
               />
-              <label for="value-1">3 min</label>
+              <label htmlFor="value-1">3 min</label>
               <input
                 value="value-2"
                 name="value-radio"
@@ -56,7 +56,7 @@ export const SideBar = (props) => {
                 type="radio"
                 onChange={handleChange}
               />
-              <label for="value-2">5 min</label>
+              <label htmlFor="value-2">5 min</label>
               <input
                 value="value-3"
                 name="value-radio"
@@ -64,7 +64,7 @@ export const SideBar = (props) => {
                 type="radio"
                 onChange={handleChange}
               />
-              <label for="value-3">10 min</label>
+              <label htmlFor="value-3">10 min</label>
             </div>
             <button
               onClick={() => {
@@ -112,8 +112,8 @@ export const SideBar = (props) => {
                   d="M15.078,19.043c1.957-0.326,5.122-0.529,4.435,1.304c-0.489,1.304-7.185,2.185-7.185,0.652 C12.328,19.467,15.078,19.043,15.078,19.043z"
                 ></path>
               </svg>
-              <span class="now">now!</span>
-              <span class="play">play</span>
+              <span className="now">now!</span>
+              <span className="play">play</span>
             </button>
           </div>
         )}
@@ -194,16 +194,16 @@ const Moves = ({ moves }) => {
   if (!moves || moves.length === 0)
     return (
       <div className="banter-container">
-        <div class="banter-loader">
-          <div class="banter-loader__box"></div>
-          <div class="banter-loader__box"></div>
-          <div class="banter-loader__box"></div>
-          <div class="banter-loader__box"></div>
-          <div class="banter-loader__box"></div>
-          <div class="banter-loader__box"></div>
-          <div class="banter-loader__box"></div>
-          <div class="banter-loader__box"></div>
-          <div class="banter-loader__box"></div>
+        <div className="banter-loader">
+          <div className="banter-loader__box"></div>
+          <div className="banter-loader__box"></div>
+          <div className="banter-loader__box"></div>
+          <div className="banter-loader__box"></div>
+          <div className="banter-loader__box"></div>
+          <div className="banter-loader__box"></div>
+          <div className="banter-loader__box"></div>
+          <div className="banter-loader__box"></div>
+          <div className="banter-loader__box"></div>
         </div>
       </div>
     );

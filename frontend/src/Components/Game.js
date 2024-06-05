@@ -14,11 +14,6 @@ const Game = () => {
   const [chats, setChats] = useState([]);
   const [chat, setChat] = useState('');
   const [opponent, setOpponent] = useState(null);
-
-  if (localStorage.getItem('chess-app-token') === null) {
-    window.location.href = '/signin';
-  }
-
   const socket = useSocket();
 
   useEffect(() => {
@@ -48,6 +43,8 @@ const Game = () => {
         setOpponent(data.opponent);
         setPlayerColor(data.color);
         setGameStarted(true);
+        chess.reset();
+        console.log(chess.history());
         data.moves.forEach(move => {
           chess.move(move);
         });
