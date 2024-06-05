@@ -244,6 +244,12 @@ const Moves = ({ moves }) => {
 };
 
 const Chat = ({ chats, chatSend }) => {
+  const containerRef = useRef(null);
+  useEffect(() => {
+    if (containerRef.current) {
+      containerRef.current.scrollTop = containerRef.current.scrollHeight;
+    }
+  }, [chats]);
   const [message, setMessage] = useState("");
 
   const handleSendMessage = () => {
@@ -261,7 +267,7 @@ const Chat = ({ chats, chatSend }) => {
 
   return (
     <div className="chat-container">
-      <div className="chat-messages">
+      <div className="chat-messages" ref={containerRef}>
         {chats.map((chat, index) => (
           <div key={index} className={`chat-message ${chat.sender === 'Me' ? 'own-message' : 'opponent-message'}`}>
             <span className="chat-text">{chat.message}</span>
@@ -269,7 +275,6 @@ const Chat = ({ chats, chatSend }) => {
         ))}
       </div>
       <div class="messageBox">
-        
         <input
           placeholder="Message..."
           type="text"
