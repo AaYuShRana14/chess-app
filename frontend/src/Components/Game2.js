@@ -13,7 +13,33 @@ const Game2 = () => {
     rating: 1500,
     img: "https://images.unsplash.com/photo-1511185307590-3c29c11275ca?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&h=1080&ixid=MnwxfDB8MXxyYW5kb218MHx8d2FsbHBhcGVyLGxhbmRzY2FwZXx8fHx8fDE3MTczNDA3NjQ&ixlib=rb-4.0.3&q=80&utm_campaign=api-credit&utm_medium=referral&utm_source=unsplash_source&w=1",
   });
-  const {moves, gameover, selectedSquare, setSelectedSquare, position, setPosition, optionSquares, setOptionSquares, playerColor, setPlayerColor, gameStarted, setGameStarted, chats, setChats, chat, setChat, opponent, setOpponent, chatHandler, startGame, checkDrop, highlightSquares, squareClick, startTimer, setStartTimer} = GameHandler();
+  const {
+    moves,
+    gameover,
+    selectedSquare,
+    setSelectedSquare,
+    position,
+    setPosition,
+    optionSquares,
+    setOptionSquares,
+    playerColor,
+    setPlayerColor,
+    gameStarted,
+    setGameStarted,
+    chats,
+    setChats,
+    chat,
+    setChat,
+    opponent,
+    setOpponent,
+    chatHandler,
+    startGame,
+    checkDrop,
+    highlightSquares,
+    squareClick,
+    startTimer,
+    setStartTimer,
+  } = GameHandler();
 
   const playHandler = (t) => {
     startGame();
@@ -22,21 +48,18 @@ const Game2 = () => {
   };
 
   useEffect(() => {
-    console.log(moves);
-    if(moves) {
+    if (moves) {
       playerRef1.current.toggle();
       playerRef2.current.toggle();
     }
   }, [moves]);
 
-
   useEffect(() => {
     if (startTimer) {
-      if(playerColor === "white") {
+      if (playerColor === "white") {
         playerRef2.current.start();
         playerRef1.current.stop();
-      }
-      else {
+      } else {
         playerRef2.current.stop();
         playerRef1.current.start();
       }
@@ -55,11 +78,13 @@ const Game2 = () => {
       })
       .then((res) => {
         const data = res.data;
-        setMe({
-          name: data.name,
-          rating: data.rating,
-          img: data.avatar,
-        });
+        if (data) {
+          setMe({
+            name: data.name,
+            rating: data.rating,
+            img: data.avatar,
+          });
+        }
       });
   }, []);
 
@@ -78,7 +103,12 @@ const Game2 = () => {
           highlightSquares={highlightSquares}
           squareClick={squareClick}
         />
-        <SideBar isStarted={startTimer} isPlaying={playHandler} gameover={gameover} moves={moves}/>
+        <SideBar
+          isStarted={startTimer}
+          isPlaying={playHandler}
+          gameover={gameover}
+          moves={moves}
+        />
       </div>
     </div>
   );
