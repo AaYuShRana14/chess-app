@@ -1,149 +1,138 @@
-import { useState, useRef, useEffect } from "react";
-import { Chessboard } from "react-chessboard";
-import { Chess } from "chess.js";
-import { useSocket } from "../hooks/useSocket";
+import { Board } from "./ui/Board.js";
+import { SideBar } from "./ui/SideBar.js";
+import "./Game2.css";
+import axios from "axios";
+import Confetti from 'react-confetti'
+import { useState, useEffect, useRef } from "react";
+import { GameHandler } from "../hooks/GameHandler.js";
 
 const Game = () => {
-  const chessRef = useRef(new Chess());
-  const chess = chessRef.current;
-  const [selectedSquare, setSelectedSquare] = useState(null);
-  const [position, setPosition] = useState(chess.fen());
-  const [optionSquares, setOptionSquares] = useState({});
-  const [playerColor, setPlayerColor] = useState('white'); 
-  const [gameStarted, setGameStarted] = useState(false);
-  const [chats, setChats] = useState([]);
-  const [chat, setChat] = useState('');
-  const [opponent, setOpponent] = useState(null);
-  const socket = useSocket();
+  const { innerWidth: width, innerHeight: height } = window;
+  const playerRef1 = useRef(null);
+  const playerRef2 = useRef(null);
+  const [confetti, setConfetti] = useState(false);
+  const [me, setMe] = useState({
+    name: "Me",
+    id:"1",
+    rating: 1500,
+    img: "https://images.unsplash.com/photo-1511185307590-3c29c11275ca?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&h=1080&ixid=MnwxfDB8MXxyYW5kb218MHx8d2FsbHBhcGVyLGxhbmRzY2FwZXx8fHx8fDE3MTczNDA3NjQ&ixlib=rb-4.0.3&q=80&utm_campaign=api-credit&utm_medium=referral&utm_source=unsplash_source&w=1",
+  });
+  const {
+    moves,
+    gameover,
+    selectedSquare,
+    setSelectedSquare,
+    position,
+    setPosition,
+    optionSquares,
+    setOptionSquares,
+    playerColor,
+    setPlayerColor,
+    gameStarted,
+    setGameStarted,
+    chats,
+    setChats,
+    opponent,
+    setOpponent,
+    chatHandler,
+    startGame,
+    checkDrop,
+    highlightSquares,
+    squareClick,
+    startTimer,
+    setStartTimer,
+  } = GameHandler();
+
+  const chatSend = (message) => {
+    chatHandler(message);
+  }
 
   useEffect(() => {
-    if (localStorage.getItem('chess-app-token') === null) {
-      window.location.href = '/signin';
-    }
-    if (!socket) return;
-
-    socket.onmessage = (message) => {
-      const data = JSON.parse(message.data);
-      console.log(data);
-      if (data.type === 'start') {
-        setChats([]);
-        setOpponent(data.opponent);
-        chess.reset();
-        setPlayerColor(data.color);
-        setPosition(chess.fen());
-      }
-      if (data.type === 'move') {
-        chess.move(data.move);
-        setPosition(chess.fen());
-      }
-      if (data.type === 'gameover') {
-        console.log('Game Over');
-      }
-      if (data.type === 'Reconnect') {
-        setOpponent(data.opponent);
-        setPlayerColor(data.color);
-        setGameStarted(true);
-        chess.reset();
-        console.log(chess.history());
-        data.moves.forEach(move => {
-          chess.move(move);
-        });
-        setPosition(chess.fen());
-      }
-      if (data.type === "chat") {
-        setChats((prevChats) => [...prevChats, data.message]);
+    if(gameover) {
+      setStartTimer(false);
+      if(gameover===playerColor) {
+        setConfetti(true);
+        setTimeout(() => {
+          setConfetti(false);
+        }, 5000);
       }
     }
-  }, [socket, chess]);
+  }, [gameover])
 
-  const chatHandler = () => {
-    socket.send(JSON.stringify({ type: 'chat', message: chat }));
-    setChats((prevChats) => [...prevChats, chat]);
-    setChat(''); 
-  }
-
-  const startGame = () => {
-    setGameStarted(true);
-    console.log('start');
-    socket.send(JSON.stringify({ type: 'create' }));
-  }
-
-  const checkDrop = (from, to, promotion) => {
-    if (!promotion) promotion = 'wQ';
-    promotion = promotion.substring(1).toLowerCase();
-    let move = { from, to, promotion };
-    try {
-      const result = chess.move(move);
-      if (result.color !== playerColor.charAt(0)) {
-        chess.undo();
-        throw new Error('Invalid Move');
-      }
-      
-      setPosition(chess.fen());
-      socket.send(JSON.stringify({ type: 'move', move: result.san }));
-    } catch (e) {
-      return;
-    } 
-    setOptionSquares({});
+  const playHandler = (t) => {
+    startGame();
+    playerRef1.current.setTime(t);
+    playerRef2.current.setTime(t);
   };
 
-  const highlightSquares = (square) => {
-    const moves = chess.moves({ square, verbose: true });
-    const newSquares = {};
-    moves.map((move) => {
-      newSquares[move.to] = {
-        background:
-          chess.get(move.to) &&
-          chess.get(move.to).color !== chess.get(square).color
-            ? "radial-gradient(circle, rgba(0,0,0,.1) 85%, transparent 85%)"
-            : "radial-gradient(circle, rgba(0,0,0,.1) 25%, transparent 25%)",
-        borderRadius: "50%",
-      };
-      return move;
-    });
-    newSquares[square] = {
-      background: "rgba(255, 255, 0, 0.4)",
-    };
-    setOptionSquares(newSquares);
-  };
-
-  const squareClick = (square) => {
-    if (selectedSquare) {
-      checkDrop(selectedSquare, square);
-      setSelectedSquare(null);
-      return;
+  useEffect(() => {
+    if (moves && startTimer) {
+      playerRef1.current.toggle();
+      playerRef2.current.toggle();
     }
-    setSelectedSquare(square);
-    highlightSquares(square);
-  };
+  }, [moves]);
+
+  useEffect(() => {
+    if (startTimer) {
+      if (playerColor === "white") {
+        playerRef2.current.start();
+        playerRef1.current.stop();
+      } else {
+        playerRef2.current.stop();
+        playerRef1.current.start();
+      }
+    } else {
+      playerRef1.current.stop();
+      playerRef2.current.stop();
+    }
+  }, [startTimer]);
+
+  useEffect(() => {
+    axios
+      .get("http://localhost:8000/profile/me", {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("chess-app-token")}`,
+        },
+      })
+      .then((res) => {
+        const data = res.data;
+        if (data) {
+          setMe({
+            name: data.name,
+            id: data._id,
+            rating: data.rating,
+            img: data.avatar,
+          });
+        }
+      });
+  }, []);
 
   return (
-    <div>
-      {opponent !== null && <h2>Opponent: {opponent.mail}</h2>}
-      <header>
-        <h1>React Chessboard</h1>
-        <div className="board" style={{ width: "30%" }}>
-          <Chessboard
-            id="BasicBoard"
-            position={position}
-            onPieceDrop={checkDrop}
-            showBoardNotation={true}
-            animationDuration={0}
-            onSquareClick={squareClick}
-            customSquareStyles={optionSquares}
-            boardOrientation={playerColor} 
-            onPieceDragBegin={(piece, square) => highlightSquares(square)}
-          />
-        </div>
-      </header>
-      <button onClick={startGame} disabled={gameStarted}>Play</button>
-      <div>
-        {chats.map((chat, index) => (
-          <p key={index}>{chat}</p>
-        ))}
+    <div className="main">
+      {confetti && <Confetti width={width} height={height}/>}
+      <div className="sub-main">
+        <Board
+          me={me}
+          opponent={opponent}
+          playerRef1={playerRef1}
+          playerRef2={playerRef2}
+          playerColor={playerColor}
+          position={position}
+          optionSquares={optionSquares}
+          checkDrop={checkDrop}
+          highlightSquares={highlightSquares}
+          squareClick={squareClick}
+        />
+        <SideBar
+          isStarted={startTimer}
+          isPlaying={playHandler}
+          gameover={gameover}
+          moves={moves}
+          chats={chats}
+          me={me}
+          chatSend={chatSend}
+        />
       </div>
-      <input type="text" value={chat} onChange={(e) => setChat(e.target.value)} />
-      <button onClick={chatHandler}>Send</button>
     </div>
   );
 };

@@ -5,7 +5,10 @@ const isLoggedin = require('../Middleware/isLoggedin');
 
 router.get('/me', isLoggedin, async (req, res) => {
   try {
-    const user = await User.findById(req.user.id);
+    let user = await User.findById(req.user.id) ;
+    if (!user) {
+      user= await User.findOne({email: req.user.email});
+    }
     res.json(user);
   } catch (err) {
     res.status(500).send('error');
