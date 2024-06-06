@@ -12,7 +12,7 @@ export const useSocket = () => {
       return;
     }
 
-    const ws = new WebSocket(`ws://localhost:8080?token=${token}`);
+    const ws = new WebSocket(`wss://chess-app-lhi0.onrender.com?token=${token}`);
 
     ws.onopen = () => {
       console.log('Connected');
