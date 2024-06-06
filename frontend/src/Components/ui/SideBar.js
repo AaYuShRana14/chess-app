@@ -140,10 +140,10 @@ const History = ({me}) => {
   const [error, setError] = useState(null);
   const displayUser = (white,black) => {
     if(white === me.id){
-      window.location.href = 'http://localhost:3000/profile/'+black;
+      window.location.href = 'https://chess-app-two.vercel.app/profile/'+black;
     }
     else{
-      window.location.href='http://localhost:3000/profile/'+white;
+      window.location.href='https://chess-app-two.vercel.app/profile/'+white;
     }
   }
   useEffect(() => {
