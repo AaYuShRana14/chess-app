@@ -26,7 +26,7 @@ router.get('/', async (req, res) => {
             if (u) {
                 const id=u._id;
                 const token = jwt.sign({ email: email ,id}, process.env.JWT_SECRET);
-                const homepageUrl = `http://localhost:3000/auth-redirect/?token=${token}`;
+                const homepageUrl = `https://chess-app-opin.onrender.com/auth-redirect/?token=${token}`;
                 return res.redirect(homepageUrl);
             }
             else{
@@ -40,7 +40,7 @@ router.get('/', async (req, res) => {
                 await user.save();
                 const id=user._id;
                 const token = jwt.sign({ email: email ,id}, process.env.JWT_SECRET);
-                const homepageUrl = `http://localhost:3000/auth-redirect/?token=${token}`;
+                const homepageUrl = `https://chess-app-opin.onrender.com/auth-redirect/?token=${token}`;
                 res.redirect(homepageUrl);
             }
         }
