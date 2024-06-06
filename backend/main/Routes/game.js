@@ -28,6 +28,7 @@ const updateRating = (winnerRating, loserRating, verdict) => {
 
 router.put('/update', async (req, res) => {
     const { whiteid, blackid, winnerid, verdict, passkey, moves } = req.body;
+    console.log(whiteid, blackid, winnerid, verdict, passkey, moves);
     if (passkey !== process.env.PASS_KEY) {
         res.status(401).send('Unauthorized');
         return;
