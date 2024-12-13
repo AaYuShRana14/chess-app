@@ -7,12 +7,13 @@ const jwt=require('jsonwebtoken');
 require('dotenv').config();
 
 router.post('/', async (req,res)=>{
+    console.log(req.body);
     const user = await User.findOne({email:req.body.email});
     if(!user) {
         return res.status(400).json({msg:'User not found'});
     }
     const resettoken=jwt.sign({email:req.body.email},process.env.JWT_SECRET,{expiresIn:'1h'});
-    const link=`https://chess-app-two.vercel.app/reset-password/${resettoken}`;
+    const link=`http://localhost:3000/reset-password/${resettoken}`;
     const email=req.body.email;
     const subject='Password reset';
     const html=`<p>Click <a href="${link}">here</a> to reset your password</p>`;

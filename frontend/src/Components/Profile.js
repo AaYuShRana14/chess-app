@@ -39,7 +39,7 @@ export default function Profile() {
     useEffect(() => {
         const getProfile = async () => {
             try {
-                const res = await axios.get(`https://chess-app-opin.onrender.com/profile/${id}`);
+                const res = await axios.get(`http://localhost:8000/profile/${id}`);
                 setUser(res.data);
             } catch (err) {
                 console.log("err");

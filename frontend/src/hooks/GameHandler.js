@@ -39,7 +39,7 @@ export const GameHandler = () => {
       if (data.type === "start") {
         setChats([]);
         axios
-          .get(`https://chess-app-opin.onrender.com/profile/${data.opponent.id}`)
+        .get(`http://localhost:8000/profile/${data.opponent.id}`)
           .then((res) => {
             setOpponent({
               name: res.data.name,
@@ -62,7 +62,7 @@ export const GameHandler = () => {
       }
       if (data.type === "Reconnect") {
         axios
-          .get(`https://chess-app-opin.onrender.com/profile/${data.opponent.id}`)
+        .get(`http://localhost:8000/profile/${data.opponent.id}`)
           .then((res) => {
             setOpponent({
               name: res.data.name,

@@ -89,7 +89,7 @@ const Game = () => {
 
   useEffect(() => {
     axios
-      .get("https://chess-app-opin.onrender.com/profile/me", {
+      .get("http://localhost:8000/profile/me", {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("chess-app-token")}`,
         },

@@ -7,7 +7,7 @@ require('dotenv').config();
 router.get('/', async (req, res) => {
     const code = req.query.code;
     try {
-        const redirectURL = "https://chess-app-opin.onrender.com/oauth"
+        const redirectURL = "http://localhost:8000/oauth"
         const oAuth2Client = new OAuth2Client(
             process.env.GOOGLE_CLIENT_ID,
             process.env.GOOGLE_CLIENT_SECRET,
@@ -26,7 +26,7 @@ router.get('/', async (req, res) => {
             if (u) {
                 const id=u._id;
                 const token = jwt.sign({ email: email ,id}, process.env.JWT_SECRET);
-                const homepageUrl = `https://chess-app-two.vercel.app/auth-redirect/?token=${token}`;
+                const homepageUrl = process.env.HOMEPAGE_URL + '/auth-redirect/?token=' + token;
                 return res.redirect(homepageUrl);
             }
             else{
@@ -40,7 +40,7 @@ router.get('/', async (req, res) => {
                 await user.save();
                 const id=user._id;
                 const token = jwt.sign({ email: email ,id}, process.env.JWT_SECRET);
-                const homepageUrl = `https://chess-app-two.vercel.app/auth-redirect/?token=${token}`;
+                const homepageUrl = process.env.HOMEPAGE_URL + '/auth-redirect/?token=' + token;
                 res.redirect(homepageUrl);
             }
         }
