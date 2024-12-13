@@ -32,7 +32,7 @@ export default function ForgotPassword() {
     if (emailValid) {
       try {
         const response = await axios.post(
-          "https://chess-app-opin.onrender.com/forgot-password",
+          "http://localhost:8000/forgot-password",
           { email }
         );
         setSuccessMessage("You will receive a password reset link shortly.");

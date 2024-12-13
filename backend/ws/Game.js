@@ -66,6 +66,10 @@ class Game {
             this.player2.send(JSON.stringify({ type: 'gameover', winner }));
             updateStatus(this.p1.id, this.p2.id, this.p1.id, "draw", this.board.history(), process.env.PASS_KEY);
         } else {
+            conosle.log("*******")
+            console.log(this.p1);
+            console.log(this.p2);
+        
             winner = this.board.turn() === 'w' ? 'black' : 'white';
             this.player1.send(JSON.stringify({ type: 'gameover', winner }));
             this.player2.send(JSON.stringify({ type: 'gameover', winner }));

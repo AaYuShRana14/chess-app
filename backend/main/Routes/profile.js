@@ -4,6 +4,7 @@ const User = require('../Models/User');
 const isLoggedin = require('../Middleware/isLoggedin');
 
 router.get('/me', isLoggedin, async (req, res) => {
+  console.log(req.user);
   try {
     let user = await User.findById(req.user.id) ;
     if (!user) {
@@ -26,6 +27,7 @@ router.get('/games', isLoggedin, async (req, res) => {
     });
 
     if (!user || !user.matches) {
+      console.log('no matches found');
       return res.status(404).json({ msg: 'No matches found for this user' });
     }
 
