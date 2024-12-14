@@ -11,6 +11,8 @@ import Profile from "./Components/Profile";
 import Fallback from "./Components/Fallback";
 import UpdateProfile from "./Components/UpdateProfile";
 import Leaderboard from "./Components/LeaderBoard";
+import History from "./Components/History";
+import Analyse from "./Components/Analyse";
 function App() {
   return (
     <BrowserRouter>
@@ -26,6 +28,8 @@ function App() {
         <Route path="/updateProfile" element={<UpdateProfile />} />
         <Route path="/leaderboard" element={<Navigate to="/leaderboard/1" replace />} />
         <Route path="/leaderboard/:page" element={<Leaderboard></Leaderboard>} />
+        <Route path="/history" element={<History></History>}/>
+        <Route path="/analyse/:matchid" element={<Analyse></Analyse>}/>
         <Route path="*" element={<Fallback />} />
       </Routes>
     </BrowserRouter>

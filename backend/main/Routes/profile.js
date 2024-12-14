@@ -4,7 +4,6 @@ const User = require('../Models/User');
 const isLoggedin = require('../Middleware/isLoggedin');
 
 router.get('/me', isLoggedin, async (req, res) => {
-  console.log(req.user);
   try {
     let user = await User.findById(req.user.id) ;
     if (!user) {
