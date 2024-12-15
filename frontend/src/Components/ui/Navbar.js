@@ -43,6 +43,16 @@ const Navbar = () => {
                   </NavLink>
               </li>
               <li className="navbar-item">
+                <NavLink to="/leaderboard" className="navbar-link">
+                  Leaderboard
+                  </NavLink>
+              </li>
+              <li className="navbar-item">
+                <NavLink to="/history" className="navbar-link">
+                History
+                </NavLink>
+              </li>
+              <li className="navbar-item">
                 <a href="/game" className="navbar-link">
                   Play
                 </a>

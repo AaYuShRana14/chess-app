@@ -108,7 +108,7 @@
     }
   
     .navbar-link {
-      font-size: 0.8rem; 
+      font-size: 0.65rem; 
       padding: 2px 0.1rem 0rem 2px;
       margin: 0; 
       top: 4px;
@@ -223,3 +223,9 @@
     fill: white;
   }
 }
+/* For the active or clicked link */
+.navbar-link.active::after {
+  transform: scaleX(1);
+}
+
+
