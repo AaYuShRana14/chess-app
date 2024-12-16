@@ -42,7 +42,8 @@ const History = () => {
     return (
         <div>
             <Navbar/>
-            <h1>History</h1>
+           <div className="text-white mt-14 mb-10 mx-10">
+                <h1 className="text-center text-4xl py-10 font-bold w-1/2 mx-auto">History</h1>
             {history.map((game, index) => {
                 return (
                     <div key={index} onClick={()=>{navigate(`/analyse/${game._id}`)}}>
@@ -60,6 +61,7 @@ const History = () => {
                     </div>
                 );
             })}
+            </div>
         </div>
     );
 };

@@ -95,15 +95,16 @@ export default function UpdateProfile() {
     <ChakraProvider>
       <Flex
         minH={'100vh'}
+        color={'white'}
         align={'center'}
         justify={'center'}
-        bg={useColorModeValue('gray.50', 'gray.800')}
+        bg={useColorModeValue('teal.900', 'gray.800')}
       >
         <Stack
           spacing={4}
           w={'full'}
           maxW={'md'}
-          bg={useColorModeValue('white', 'gray.700')}
+          bg={useColorModeValue('teal.700', 'gray.700')}
           rounded={'xl'}
           boxShadow={'lg'}
           p={6}
@@ -121,7 +122,8 @@ export default function UpdateProfile() {
                 </Avatar>
               </Center>
               <Center w="full">
-                <Button w="full" onClick={() => widgetRef.current.open()}>
+                <Button  bg={'teal.500'} _hover={{ bg: 'teal.400' }}
+              color={'white'} w="full" onClick={() => widgetRef.current.open()}>
                   Change Picture
                 </Button>
               </Center>
@@ -160,34 +162,39 @@ export default function UpdateProfile() {
               Wins:
             </Text>
             <Text fontSize="lg">{user.totalWins}</Text>
+            <Text fontSize="lg" fontWeight="bold">
+              Losses:
+            </Text>
+            <Text fontSize="lg">{user.totalMatches - user.totalWins}</Text>
+
           </FormControl>
           <Stack spacing={6} direction={['column', 'row']}>
             <Button
-              bg={'red.400'}
+              bg={'red.500'}
               color={'white'}
               w="full"
-              _hover={{ bg: 'blue.500' }}
+              _hover={{ bg: 'red.400' }}
               onClick={() => {
                 localStorage.removeItem('chess-app-token');
                 window.location.href = '/signin';
               }}
             >
-             logout
+             Logout
             </Button>
             <Button
-              bg={'blue.400'}
+              bg={'teal.500'}
               color={'white'}
               w="full"
-              _hover={{ bg: 'blue.500' }}
+              _hover={{ bg: 'teal.400' }}
               onClick={updateHandler}
             >
               Update
             </Button>
             <Button
-              bg={'blue.400'}
+              bg={'cyan.500'}
               color={'white'}
               w="full"
-              _hover={{ bg: 'blue.500' }}
+              _hover={{ bg: 'cyan.400' }}
               onClick={() => (window.location.href = '/')}
             >
               Home
