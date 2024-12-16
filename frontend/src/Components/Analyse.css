@@ -14,9 +14,6 @@
 .board-wrapper{
     height: 34%;
     width: 34%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
 }
 .page-title {
     margin-top: 10%;
@@ -29,7 +26,7 @@
     display: flex;
     align-items: center;
     align-content: space-between;
-    justify-content: space-between;
+    justify-content: start;
     font-size: 1.25rem;
     margin-bottom: 1rem;
 }
@@ -49,6 +46,8 @@
 
 .controls {
     display: flex;
+    justify-content: center;
+    align-items: center;
     gap: 1rem;
 }
 
@@ -71,4 +70,20 @@
 
 .reset:hover {
     background-color: #2563eb;
+}
+.evaluation-bar-container {
+    width: 50px;
+    height: 300px;
+    border: 2px solid #000;
+    position: relative;
+    background: linear-gradient(to top, black 50%, white 50%);
+    margin: 20px auto;
+}
+
+.evaluation-bar {
+    width: 100%;
+    position: absolute;
+    bottom: 0;
+    background-color: limegreen;
+    height: 50%; 
 }
