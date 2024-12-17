@@ -3,7 +3,7 @@ const User=require('../Models/User');
 router.get('/:page',async (req,res)=>{
     try{
         const page=parseInt(req.params.page);
-        const users=await User.find({},'name rating avatar').sort({rating:-1}).limit(10).skip((page-1)*10);
+        const users=await User.find({},'name rating avatar totalMatches totalWins').sort({rating:-1}).limit(10).skip((page-1)*10);
         res.send(users);
     }
     catch(err){
