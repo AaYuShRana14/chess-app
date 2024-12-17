@@ -3,6 +3,8 @@
 /.pnp
 .pnp.js
 .cache/
+frontend/node_modules/.cache/
+
 # testing
 /coverage
 
