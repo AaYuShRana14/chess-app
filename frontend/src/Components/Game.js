@@ -41,6 +41,7 @@ const Game = () => {
     squareClick,
     startTimer,
     setStartTimer,
+    onlineCount
   } = GameHandler();
 
   const chatSend = (message) => {
@@ -132,6 +133,7 @@ const Game = () => {
           me={me}
           chatSend={chatSend}
         />
+        <div>{onlineCount}</div>
       </div>
     </div>
   );
