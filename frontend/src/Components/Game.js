@@ -2,7 +2,7 @@ import { Board } from "./ui/Board.js";
 import { SideBar } from "./ui/SideBar.js";
 import "./Game2.css";
 import axios from "axios";
-import Confetti from 'react-confetti'
+import Confetti from "react-confetti";
 import { useState, useEffect, useRef } from "react";
 import { GameHandler } from "../hooks/GameHandler.js";
 
@@ -13,7 +13,7 @@ const Game = () => {
   const [confetti, setConfetti] = useState(false);
   const [me, setMe] = useState({
     name: "Me",
-    id:"1",
+    id: "1",
     rating: 1500,
     img: "https://images.unsplash.com/photo-1511185307590-3c29c11275ca?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&h=1080&ixid=MnwxfDB8MXxyYW5kb218MHx8d2FsbHBhcGVyLGxhbmRzY2FwZXx8fHx8fDE3MTczNDA3NjQ&ixlib=rb-4.0.3&q=80&utm_campaign=api-credit&utm_medium=referral&utm_source=unsplash_source&w=1",
   });
@@ -41,24 +41,24 @@ const Game = () => {
     squareClick,
     startTimer,
     setStartTimer,
-    onlineCount
+    onlineCount,
   } = GameHandler();
 
   const chatSend = (message) => {
     chatHandler(message);
-  }
+  };
 
   useEffect(() => {
-    if(gameover) {
+    if (gameover) {
       setStartTimer(false);
-      if(gameover===playerColor) {
+      if (gameover === playerColor) {
         setConfetti(true);
         setTimeout(() => {
           setConfetti(false);
         }, 5000);
       }
     }
-  }, [gameover])
+  }, [gameover]);
 
   const playHandler = (t) => {
     startGame();
@@ -110,7 +110,7 @@ const Game = () => {
 
   return (
     <div className="main">
-      {confetti && <Confetti width={width} height={height}/>}
+      {confetti && <Confetti width={width} height={height} />}
       <div className="sub-main">
         <Board
           me={me}

@@ -127,7 +127,7 @@ export const SideBar = (props) => {
             {props.gameover === "black" && <p>Black Wins</p>}
           </div>
         )}
-        {tab === "history" && <History history={props.history} me={props.me}/>}
+        {tab === "history" && <History history={props.history} me={props.me} />}
         {tab === "chat" && isPlaying && (
           <Chat chats={props.chats} chatSend={props.chatSend} />
         )}
@@ -135,17 +135,16 @@ export const SideBar = (props) => {
     </div>
   );
 };
-const History = ({me}) => {
+const History = ({ me }) => {
   const [historyData, setHistoryData] = useState([]);
   const [error, setError] = useState(null);
-  const displayUser = (white,black) => {
-    if(white === me.id){
-      window.location.href = 'http://localhost:3000/profile/'+black;
+  const displayUser = (white, black) => {
+    if (white === me.id) {
+      window.location.href = "http://localhost:3000/profile/" + black;
+    } else {
+      window.location.href = "http://localhost:3000/profile/" + white;
     }
-    else{
-      window.location.href='http://localhost:3000/profile/'+white;
-    }
-  }
+  };
   useEffect(() => {
     const fetchHistory = async () => {
       try {
@@ -178,7 +177,13 @@ const History = ({me}) => {
       <div className="history-content">
         {historyData.length > 0 ? (
           historyData.map((game, index) => (
-            <div key={index} className="history-item" onClick={()=>{displayUser(game.whiteId,game.blackId)}}>
+            <div
+              key={index}
+              className="history-item"
+              onClick={() => {
+                displayUser(game.whiteId, game.blackId);
+              }}
+            >
               <p>{index + 1}</p>
               <p>{game.white}</p>
               <p>{game.black}</p>
@@ -269,7 +274,12 @@ const Chat = ({ chats, chatSend }) => {
     <div className="chat-container">
       <div className="chat-messages" ref={containerRef}>
         {chats.map((chat, index) => (
-          <div key={index} className={`chat-message ${chat.sender === 'Me' ? 'own-message' : 'opponent-message'}`}>
+          <div
+            key={index}
+            className={`chat-message ${
+              chat.sender === "Me" ? "own-message" : "opponent-message"
+            }`}
+          >
             <span className="chat-text">{chat.message}</span>
           </div>
         ))}

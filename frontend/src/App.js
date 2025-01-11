@@ -1,5 +1,5 @@
 import "./App.css";
-import { BrowserRouter, Routes, Route,Navigate} from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Game from "./Components/Game";
 import AuthRedirect from "./Components/AuthRedirect";
 import Signup from "./Components/Signup";
@@ -26,10 +26,16 @@ function App() {
         <Route path="/reset-password/:token" element={<ResetPassword />} />
         <Route path="/auth-redirect" element={<AuthRedirect />} />
         <Route path="/updateProfile" element={<UpdateProfile />} />
-        <Route path="/leaderboard" element={<Navigate to="/leaderboard/1" replace />} />
-        <Route path="/leaderboard/:page" element={<Leaderboard></Leaderboard>} />
-        <Route path="/history" element={<History></History>}/>
-        <Route path="/analyse/:matchid" element={<Analyse></Analyse>}/>
+        <Route
+          path="/leaderboard"
+          element={<Navigate to="/leaderboard/1" replace />}
+        />
+        <Route
+          path="/leaderboard/:page"
+          element={<Leaderboard></Leaderboard>}
+        />
+        <Route path="/history" element={<History></History>} />
+        <Route path="/analyse/:matchid" element={<Analyse></Analyse>} />
         <Route path="*" element={<Fallback />} />
       </Routes>
     </BrowserRouter>

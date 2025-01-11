@@ -85,13 +85,11 @@ function Signup() {
         setErrors({});
       } catch (error) {
         const msg = error.response.data.msg || error.response.msg;
-        if(msg === "User already exists") {
-          setErrors({email: "User already exists"});
-        }
-        else if(msg === "Invalid data") {
+        if (msg === "User already exists") {
+          setErrors({ email: "User already exists" });
+        } else if (msg === "Invalid data") {
           validateInputs();
-        }
-        else console.error("Error during signup:", msg);
+        } else console.error("Error during signup:", msg);
       }
     }
   };
@@ -110,7 +108,7 @@ function Signup() {
               Sign up
             </Heading>
             <Text fontSize={"lg"} color={"gray.600"}>
-            Unlock the Grandmaster Within You
+              Unlock the Grandmaster Within You
             </Text>
           </Stack>
           <Box
@@ -123,14 +121,22 @@ function Signup() {
               <Stack spacing={4}>
                 <HStack>
                   <Box>
-                    <FormControl id="firstName" isRequired isInvalid={errors.firstName}>
+                    <FormControl
+                      id="firstName"
+                      isRequired
+                      isInvalid={errors.firstName}
+                    >
                       <FormLabel>First Name</FormLabel>
                       <Input type="text" ref={firstNameRef} />
                       <FormErrorMessage>{errors.firstName}</FormErrorMessage>
                     </FormControl>
                   </Box>
                   <Box>
-                    <FormControl id="lastName" isRequired isInvalid={errors.lastName}>
+                    <FormControl
+                      id="lastName"
+                      isRequired
+                      isInvalid={errors.lastName}
+                    >
                       <FormLabel>Last Name</FormLabel>
                       <Input type="text" ref={lastNameRef} />
                       <FormErrorMessage>{errors.lastName}</FormErrorMessage>
@@ -142,14 +148,23 @@ function Signup() {
                   <Input type="email" ref={emailRef} />
                   <FormErrorMessage>{errors.email}</FormErrorMessage>
                 </FormControl>
-                <FormControl id="password" isRequired isInvalid={errors.password}>
+                <FormControl
+                  id="password"
+                  isRequired
+                  isInvalid={errors.password}
+                >
                   <FormLabel>Password</FormLabel>
                   <InputGroup>
-                    <Input type={showPassword ? "text" : "password"} ref={passwordRef} />
+                    <Input
+                      type={showPassword ? "text" : "password"}
+                      ref={passwordRef}
+                    />
                     <InputRightElement h={"full"}>
                       <Button
                         variant={"ghost"}
-                        onClick={() => setShowPassword((showPassword) => !showPassword)}
+                        onClick={() =>
+                          setShowPassword((showPassword) => !showPassword)
+                        }
                       >
                         {showPassword ? <ViewIcon /> : <ViewOffIcon />}
                       </Button>
@@ -177,7 +192,10 @@ function Signup() {
                 </Stack>
                 <Stack pt={6}>
                   <Text align={"center"}>
-                    Already a user? <Link href="/signin" color={"blue.400"}>Signin</Link>
+                    Already a user?{" "}
+                    <Link href="/signin" color={"blue.400"}>
+                      Signin
+                    </Link>
                   </Text>
                 </Stack>
               </Stack>

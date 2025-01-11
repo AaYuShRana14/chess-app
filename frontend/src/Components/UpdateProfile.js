@@ -12,26 +12,26 @@ import {
   AvatarBadge,
   Center,
   ChakraProvider,
-} from '@chakra-ui/react';
-import { useEffect, useState, useRef } from 'react';
-import axios from 'axios';
+} from "@chakra-ui/react";
+import { useEffect, useState, useRef } from "react";
+import axios from "axios";
 
 export default function UpdateProfile() {
   const [user, setUser] = useState({});
-  const token = localStorage.getItem('chess-app-token');
-  const [handlename, setHandlename] = useState('');
+  const token = localStorage.getItem("chess-app-token");
+  const [handlename, setHandlename] = useState("");
   const cloudinaryRef = useRef();
   const widgetRef = useRef();
-  const [avatar, setAvatar] = useState('');
+  const [avatar, setAvatar] = useState("");
 
   useEffect(() => {
     if (!token) {
-      window.location.href = '/signin';
+      window.location.href = "/signin";
     }
 
     async function getUser() {
       try {
-        const res = await axios.get('http://localhost:8000/profile/me', {
+        const res = await axios.get("http://localhost:8000/profile/me", {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -51,12 +51,12 @@ export default function UpdateProfile() {
     cloudinaryRef.current = window.cloudinary;
     widgetRef.current = cloudinaryRef.current.createUploadWidget(
       {
-        cloudName: 'dli5g7kbs',
-        uploadPreset: 'ltcyvgkv',
+        cloudName: "dli5g7kbs",
+        uploadPreset: "ltcyvgkv",
       },
       (err, result) => {
-        if (result.event === 'success') {
-          setAvatar(result.info.secure_url); 
+        if (result.event === "success") {
+          setAvatar(result.info.secure_url);
         }
       }
     );
@@ -65,19 +65,20 @@ export default function UpdateProfile() {
   const updateHandler = async (e) => {
     e.preventDefault();
     try {
-      await axios.put('http://localhost:8000/updateProfile', 
+      await axios.put(
+        "http://localhost:8000/updateProfile",
         {
           handlename,
           avatar,
-        }, 
+        },
         {
           headers: {
             Authorization: `Bearer ${token}`,
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
           },
         }
       );
-      window.location.href = '/';
+      window.location.href = "/";
     } catch (err) {
       console.error(err);
     }
@@ -94,36 +95,41 @@ export default function UpdateProfile() {
   return (
     <ChakraProvider>
       <Flex
-        minH={'100vh'}
-        color={'white'}
-        align={'center'}
-        justify={'center'}
-        bg={useColorModeValue('teal.900', 'gray.800')}
+        minH={"100vh"}
+        color={"white"}
+        align={"center"}
+        justify={"center"}
+        bg={useColorModeValue("teal.900", "gray.800")}
       >
         <Stack
           spacing={4}
-          w={'full'}
-          maxW={'md'}
-          bg={useColorModeValue('teal.700', 'gray.700')}
-          rounded={'xl'}
-          boxShadow={'lg'}
+          w={"full"}
+          maxW={"md"}
+          bg={useColorModeValue("teal.700", "gray.700")}
+          rounded={"xl"}
+          boxShadow={"lg"}
           p={6}
           my={12}
         >
-          <Heading lineHeight={1.1} fontSize={{ base: '2xl', sm: '3xl' }}>
+          <Heading lineHeight={1.1} fontSize={{ base: "2xl", sm: "3xl" }}>
             {user.name}
           </Heading>
           <FormControl id="userName">
             <FormLabel>Profile Picture</FormLabel>
-            <Stack direction={['column', 'row']} spacing={6}>
+            <Stack direction={["column", "row"]} spacing={6}>
               <Center>
                 <Avatar size="xl" src={avatar}>
                   <AvatarBadge size="m" rounded="full" top="100px" />
                 </Avatar>
               </Center>
               <Center w="full">
-                <Button  bg={'teal.500'} _hover={{ bg: 'teal.400' }}
-              color={'white'} w="full" onClick={() => widgetRef.current.open()}>
+                <Button
+                  bg={"teal.500"}
+                  _hover={{ bg: "teal.400" }}
+                  color={"white"}
+                  w="full"
+                  onClick={() => widgetRef.current.open()}
+                >
                   Change Picture
                 </Button>
               </Center>
@@ -133,7 +139,7 @@ export default function UpdateProfile() {
             <FormLabel>Handle Name</FormLabel>
             <Input
               placeholder={user.handlename}
-              _placeholder={{ color: 'gray.500' }}
+              _placeholder={{ color: "gray.500" }}
               type="text"
               value={handlename}
               onChange={handleHandlenameChange}
@@ -166,36 +172,35 @@ export default function UpdateProfile() {
               Losses:
             </Text>
             <Text fontSize="lg">{user.totalMatches - user.totalWins}</Text>
-
           </FormControl>
-          <Stack spacing={6} direction={['column', 'row']}>
+          <Stack spacing={6} direction={["column", "row"]}>
             <Button
-              bg={'red.500'}
-              color={'white'}
+              bg={"red.500"}
+              color={"white"}
               w="full"
-              _hover={{ bg: 'red.400' }}
+              _hover={{ bg: "red.400" }}
               onClick={() => {
-                localStorage.removeItem('chess-app-token');
-                window.location.href = '/signin';
+                localStorage.removeItem("chess-app-token");
+                window.location.href = "/signin";
               }}
             >
-             Logout
+              Logout
             </Button>
             <Button
-              bg={'teal.500'}
-              color={'white'}
+              bg={"teal.500"}
+              color={"white"}
               w="full"
-              _hover={{ bg: 'teal.400' }}
+              _hover={{ bg: "teal.400" }}
               onClick={updateHandler}
             >
               Update
             </Button>
             <Button
-              bg={'cyan.500'}
-              color={'white'}
+              bg={"cyan.500"}
+              color={"white"}
               w="full"
-              _hover={{ bg: 'cyan.400' }}
-              onClick={() => (window.location.href = '/')}
+              _hover={{ bg: "cyan.400" }}
+              onClick={() => (window.location.href = "/")}
             >
               Home
             </Button>

@@ -13,7 +13,7 @@ router.post('/', async (req,res)=>{
         return res.status(400).json({msg:'User not found'});
     }
     const resettoken=jwt.sign({email:req.body.email},process.env.JWT_SECRET,{expiresIn:'1h'});
-    const link=`http://localhost:3000/reset-password/${resettoken}`;
+    const link=`https://chess-app-two.vercel.app/reset-password/${resettoken}`;
     const email=req.body.email;
     const subject='Password reset';
     const html=`<p>Click <a href="${link}">here</a> to reset your password</p>`;

@@ -36,13 +36,13 @@ export const GameHandler = () => {
 
     socket.onmessage = (message) => {
       const data = JSON.parse(message.data);
-      if(data.type==="onlineCount"){
+      if (data.type === "onlineCount") {
         setOnlineCount(data.count);
       }
       if (data.type === "start") {
         setChats([]);
         axios
-        .get(`http://localhost:8000/profile/${data.opponent.id}`)
+          .get(`http://localhost:8000/profile/${data.opponent.id}`)
           .then((res) => {
             setOpponent({
               name: res.data.name,
@@ -65,7 +65,7 @@ export const GameHandler = () => {
       }
       if (data.type === "Reconnect") {
         axios
-        .get(`http://localhost:8000/profile/${data.opponent.id}`)
+          .get(`http://localhost:8000/profile/${data.opponent.id}`)
           .then((res) => {
             setOpponent({
               name: res.data.name,
@@ -83,7 +83,10 @@ export const GameHandler = () => {
         setMoves(chess.history());
       }
       if (data.type === "chat") {
-        setChats((prevChats) => [...prevChats, { message: data.message, sender: "Opponent" }]);
+        setChats((prevChats) => [
+          ...prevChats,
+          { message: data.message, sender: "Opponent" },
+        ]);
       }
     };
   }, [socket, chess]);
@@ -110,7 +113,7 @@ export const GameHandler = () => {
     if (socket) {
       socket.send(JSON.stringify({ type: "create" }));
     } else {
-      console.log("trying to reconnect")
+      console.log("trying to reconnect");
       setTimeout(() => {
         socket.send(JSON.stringify({ type: "create" }));
       }, 500);
