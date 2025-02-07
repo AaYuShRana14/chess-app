@@ -2,7 +2,7 @@ import { Chessboard } from "react-chessboard";
 import "./Board.css";
 import { Chess } from "chess.js";
 import Player from "./Player.js";
-import { useEffect } from "react";
+import { useEffect,useState } from "react";
 
 export const Board = (props) => {
   const chess=props.chess;
@@ -19,14 +19,22 @@ export const Board = (props) => {
   useEffect(() => {
     setCurrentHistoryIndex(chess.history().length);
     setDisplayedPosition(chess.fen());
-  }, [chess.history().length]); 
-  const handleKeyDown = (event) => {
-    if (event.key === "ArrowLeft") {
-      moveToPreviousPosition();
-    } else if (event.key === "ArrowRight") {
-      moveToNextPosition();
-    }
-  };
+  }, [chess.history().length,chess]); 
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      if (event.key === "ArrowLeft") {
+        moveToPreviousPosition();
+      } else if (event.key === "ArrowRight") {
+        moveToNextPosition();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [currentHistoryIndex,chess]);
+
   const moveToPreviousPosition = () => {
     if (currentHistoryIndex > 0) {
       const newIndex = currentHistoryIndex - 1;
@@ -42,7 +50,6 @@ export const Board = (props) => {
       setDisplayedPosition(chess.fenFromHistory(newIndex));
     }
   };
-  window.addEventListener("keydown", handleKeyDown);
   return (
     <div className="totalboard">
       <Player player={props.opponent} ref={props.playerRef1} />
