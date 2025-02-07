@@ -199,5 +199,6 @@ export const GameHandler = () => {
     setStartTimer,
     gameover,
     moves,
+    chess
   };
 };
