@@ -39,17 +39,18 @@ class Game {
             return;
         }
 
-        if (this.board.isGameOver()) {
-            this.endGame();
-            return;
-        }
-
         const message = JSON.stringify({ type: 'move', move });
         if (this.totalMoves % 2 === 0) {
             this.player1.send(message);
         } else {
             this.player2.send(message);
         }
+        if (this.board.isGameOver()) {
+            this.endGame();
+            return;
+        }
+        this.lastMoveTime = Date.now();
+
     }
 
     endGame() {
