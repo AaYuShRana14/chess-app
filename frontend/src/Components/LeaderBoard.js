@@ -1,39 +1,44 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./LeaderBoard.css";
 import Navbar from "./ui/Navbar";
 
 const Leaderboard = () => {
     const { page } = useParams();
-    const [pageNumber, selectPage] = useState(Number(page) || 1);
+    const navigate = useNavigate();
+    const [pageNumber, setPageNumber] = useState(Number(page) || 1);
     const [users, setUsers] = useState([]);
 
     useEffect(() => {
         if (page) {
-            selectPage(Number(page));
+            setPageNumber(Number(page));
         }
     }, [page]);
 
     useEffect(() => {
-        const getuser = async () => {
+        const fetchUsers = async () => {
             try {
                 const fetchedUsers = await axios.get(`http://localhost:8000/leaderboard/${pageNumber}`);
                 setUsers(fetchedUsers.data);
             } catch (err) {
-                console.log(err);
+                console.error(err);
             }
         };
-        getuser();
+        fetchUsers();
     }, [pageNumber]);
 
     const handleNextPage = () => {
-        selectPage((prevPage) => prevPage + 1);
+        const nextPage = pageNumber + 1;
+        setPageNumber(nextPage);
+        navigate(`/leaderboard/${nextPage}`);
     };
 
     const handlePrevPage = () => {
         if (pageNumber > 1) {
-            selectPage((prevPage) => prevPage - 1);
+            const prevPage = pageNumber - 1;
+            setPageNumber(prevPage);
+            navigate(`/leaderboard/${prevPage}`);
         }
     };
 
@@ -62,14 +67,15 @@ const Leaderboard = () => {
                                 {/* Rank */}
                                 <div className="flex items-center space-x-4">
                                     <div
-                                        className={`leaderboard-rank w-12 h-12 flex items-center justify-center ${pageNumber === 1 && index < 3
-                                            ? index === 0
-                                                ? "bg-yellow-400 border-b-4 border-yellow-600"
-                                                : index === 1
+                                        className={`leaderboard-rank w-12 h-12 flex items-center justify-center ${
+                                            pageNumber === 1 && index < 3
+                                                ? index === 0
+                                                    ? "bg-yellow-400 border-b-4 border-yellow-600"
+                                                    : index === 1
                                                     ? "bg-slate-400 border-b-4 border-slate-600"
                                                     : "bg-amber-600 border-b-4 border-amber-800"
-                                            : "bg-gray-400 text-gray-800"
-                                            } font-bold text-white rounded-full`}
+                                                : "bg-gray-400 text-gray-800"
+                                        } font-bold text-white rounded-full`}
                                     >
                                         {(pageNumber - 1) * 10 + index + 1}
                                     </div>
@@ -122,7 +128,6 @@ const Leaderboard = () => {
                                     >
                                         <polyline points="15 18 9 12 15 6"></polyline>
                                     </svg>
-
                                 </div>
                             </button>
                             <button
@@ -131,7 +136,6 @@ const Leaderboard = () => {
                                 hover:bg-gray-200 bg-gray-100 text-indigo-700 border duration-200 ease-in-out border-indigo-600 transition"
                             >
                                 <div className="flex leading-5">
-
                                     <svg
                                         xmlns="http://www.w3.org/2000/svg"
                                         width="100%"

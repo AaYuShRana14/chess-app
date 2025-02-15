@@ -26,12 +26,7 @@ router.get("/games", isLoggedin, async (req, res) => {
     });
 
     if (!user || !user.matches) {
-<<<<<<< HEAD
-      console.log('no matches found');
-      return res.status(404).json({ msg: 'No matches found for this user' });
-=======
       return res.status(404).json({ msg: "No matches found for this user" });
->>>>>>> a2e275a918fd78965a0329b586bc2215685efcdb
     }
 
     const matches = user.matches

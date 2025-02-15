@@ -1,66 +1,4 @@
 import {
-<<<<<<< HEAD
-    Flex,
-    Box,
-    FormControl,
-    FormLabel,
-    Input,
-    Checkbox,
-    Stack,
-    Link,
-    Button,
-    Heading,
-    Text,
-    useColorModeValue,
-    ChakraProvider,
-    FormErrorMessage,
-  } from "@chakra-ui/react";
-  import GoogleButton from "./ui/GoogleButton";
-  import { useState } from "react";
-  import axios from "axios";
-  import { useNavigate } from "react-router-dom";
-  
-  export default function Signin() {
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [isEmailInvalid, setIsEmailInvalid] = useState(false);
-    const [isPasswordInvalid, setIsPasswordInvalid] = useState(false);
-    const [formError, setFormError] = useState("");
-  
-    const navigate = useNavigate();
-  
-    const validateEmail = (email) => {
-      const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      return re.test(String(email).toLowerCase());
-    };
-  
-    const validatePassword = (password) => {
-      return password.length >= 6;
-    };
-  
-    const handleSubmit = async (e) => {
-      e.preventDefault();
-      const emailValid = validateEmail(email);
-      const passwordValid = validatePassword(password);
-  
-      setIsEmailInvalid(!emailValid);
-      setIsPasswordInvalid(!passwordValid);
-  
-      if (emailValid && passwordValid) {
-        try {
-          const response = await axios.post("http://localhost:8000/login", { email, password });
-          localStorage.setItem("chess-app-token", response.data.token);
-          navigate("/");
-          setFormError("");
-        } catch (error) {
-          if (error.response.data.msg==="Invalid credentials") {
-            setFormError("Invalid email or password");
-          } else {
-            setFormError("An error occurred. Please try again later.");
-          }
-        }
-      } else {
-=======
   Flex,
   Box,
   FormControl,
@@ -115,7 +53,6 @@ export default function Signin() {
         });
         localStorage.setItem("chess-app-token", response.data.token);
         navigate("/");
->>>>>>> a2e275a918fd78965a0329b586bc2215685efcdb
         setFormError("");
       } catch (error) {
         if (error.response.data.msg === "Invalid credentials") {

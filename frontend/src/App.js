@@ -26,23 +26,10 @@ function App() {
         <Route path="/reset-password/:token" element={<ResetPassword />} />
         <Route path="/auth-redirect" element={<AuthRedirect />} />
         <Route path="/updateProfile" element={<UpdateProfile />} />
-<<<<<<< HEAD
         <Route path="/leaderboard" element={<Navigate to="/leaderboard/1" replace />} />
         <Route path="/leaderboard/:page" element={<Leaderboard></Leaderboard>} />
         <Route path="/history" element={<History></History>}/>
         <Route path="/analyse/:matchid" element={<Analyse></Analyse>}/>
-=======
-        <Route
-          path="/leaderboard"
-          element={<Navigate to="/leaderboard/1" replace />}
-        />
-        <Route
-          path="/leaderboard/:page"
-          element={<Leaderboard></Leaderboard>}
-        />
-        <Route path="/history" element={<History></History>} />
-        <Route path="/analyse/:matchid" element={<Analyse></Analyse>} />
->>>>>>> a2e275a918fd78965a0329b586bc2215685efcdb
         <Route path="*" element={<Fallback />} />
       </Routes>
     </BrowserRouter>

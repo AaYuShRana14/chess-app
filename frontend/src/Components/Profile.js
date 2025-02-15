@@ -35,20 +35,6 @@ export default function Profile() {
   const [user, setUser] = useState({});
   const { id } = useParams();
 
-<<<<<<< HEAD
-    useEffect(() => {
-        const getProfile = async () => {
-            try {
-                const res = await axios.get(`http://localhost:8000/profile/${id}`);
-                setUser(res.data);
-            } catch (err) {
-                console.log("err");
-                return navigate('*');
-            }
-        }
-        getProfile();
-    }, [id, navigate]);
-=======
   useEffect(() => {
     const getProfile = async () => {
       try {
@@ -61,7 +47,6 @@ export default function Profile() {
     };
     getProfile();
   }, [id, navigate]);
->>>>>>> a2e275a918fd78965a0329b586bc2215685efcdb
 
   return (
     <ChakraProvider>

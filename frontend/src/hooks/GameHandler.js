@@ -42,11 +42,7 @@ export const GameHandler = () => {
       if (data.type === "start") {
         setChats([]);
         axios
-<<<<<<< HEAD
-        .get(`http://localhost:8000/profile/${data.opponent.id}`)
-=======
           .get(`http://localhost:8000/profile/${data.opponent.id}`)
->>>>>>> a2e275a918fd78965a0329b586bc2215685efcdb
           .then((res) => {
             setOpponent({
               name: res.data.name,
@@ -69,11 +65,7 @@ export const GameHandler = () => {
       }
       if (data.type === "Reconnect") {
         axios
-<<<<<<< HEAD
-        .get(`http://localhost:8000/profile/${data.opponent.id}`)
-=======
           .get(`http://localhost:8000/profile/${data.opponent.id}`)
->>>>>>> a2e275a918fd78965a0329b586bc2215685efcdb
           .then((res) => {
             setOpponent({
               name: res.data.name,

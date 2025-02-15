@@ -138,16 +138,6 @@ export const SideBar = (props) => {
 const History = ({ me }) => {
   const [historyData, setHistoryData] = useState([]);
   const [error, setError] = useState(null);
-<<<<<<< HEAD
-  const displayUser = (white,black) => {
-    if(white === me.id){
-      window.location.href = 'http://localhost:3000/profile/'+black;
-    }
-    else{
-      window.location.href='http://localhost:3000/profile/'+white;
-    }
-  }
-=======
   const displayUser = (white, black) => {
     if (white === me.id) {
       window.location.href = "http://localhost:3000/profile/" + black;
@@ -155,7 +145,6 @@ const History = ({ me }) => {
       window.location.href = "http://localhost:3000/profile/" + white;
     }
   };
->>>>>>> a2e275a918fd78965a0329b586bc2215685efcdb
   useEffect(() => {
     const fetchHistory = async () => {
       try {
