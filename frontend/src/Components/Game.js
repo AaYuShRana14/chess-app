@@ -108,7 +108,7 @@ const Game = () => {
   }, []);
 
   return (
-    <div className="main">
+    <div className="main p-16 mt-12">
       {confetti && <Confetti width={width} height={height}/>}
       <div className="sub-main">
         <Board

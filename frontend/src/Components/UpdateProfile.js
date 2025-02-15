@@ -98,13 +98,13 @@ export default function UpdateProfile() {
         color={'white'}
         align={'center'}
         justify={'center'}
-        bg={useColorModeValue('teal.900', 'gray.800')}
+        bg={useColorModeValue('purple.600', 'gray.800')}
       >
         <Stack
           spacing={4}
           w={'full'}
           maxW={'md'}
-          bg={useColorModeValue('teal.700', 'gray.700')}
+          bg={useColorModeValue('purple.500', 'gray.700')}
           rounded={'xl'}
           boxShadow={'lg'}
           p={6}
@@ -122,7 +122,7 @@ export default function UpdateProfile() {
                 </Avatar>
               </Center>
               <Center w="full">
-                <Button  bg={'teal.500'} _hover={{ bg: 'teal.400' }}
+                <Button  bg={'purple.400'} _hover={{ bg: 'purple.300' }}
               color={'white'} w="full" onClick={() => widgetRef.current.open()}>
                   Change Picture
                 </Button>
@@ -182,19 +182,19 @@ export default function UpdateProfile() {
              Logout
             </Button>
             <Button
-              bg={'teal.500'}
+              bg={'purple.400'}
               color={'white'}
               w="full"
-              _hover={{ bg: 'teal.400' }}
+              _hover={{ bg: 'purple.300' }}
               onClick={updateHandler}
             >
               Update
             </Button>
             <Button
-              bg={'cyan.500'}
+              bg={'purple.600'}
               color={'white'}
               w="full"
-              _hover={{ bg: 'cyan.400' }}
+              _hover={{ bg: 'purple.500' }}
               onClick={() => (window.location.href = '/')}
             >
               Home
