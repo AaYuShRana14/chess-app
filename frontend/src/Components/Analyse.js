@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef,useCallback } from "react";
 import { useParams } from "react-router-dom";
 import { Chessboard } from "react-chessboard";
 import { Chess } from "chess.js";
@@ -83,39 +83,57 @@ const Analyse = () => {
                 chessRef.current.reset();
                 setPosition(chessRef.current.fen());
                 stockfish.postMessage(chessRef.current.fen());
-                stockfish.postMessage('go depth 2');
+                stockfish.postMessage('go depth 20');
                 setMoveIndex(0);
             }
         }, [match]);
-
-        const handleForward = () => {
+        const handleForward = useCallback(() => {
             if (moveIndex < moves.length) {
-                chessRef.current.move(moves[moveIndex]);
+                const nextMove = moves[moveIndex];
+                const result = chessRef.current.move(nextMove);
+                if (!result) {
+                    console.error("Invalid move:", nextMove);
+                    return;
+                }
+        
                 setPosition(chessRef.current.fen());
                 stockfish.postMessage(`position fen ${chessRef.current.fen()}`);
-                stockfish.postMessage('go depth 2');
+                stockfish.postMessage('go depth 20');
                 setMoveIndex(moveIndex + 1);
             }
-        };
-
-        const handleBackward = () => {
+        }, [moveIndex, moves, stockfish]);
+        
+        const handleBackward = useCallback(() => {
             if (moveIndex > 0) {
                 chessRef.current.undo();
                 setPosition(chessRef.current.fen());
                 stockfish.postMessage(`position fen ${chessRef.current.fen()}`);
-                stockfish.postMessage('go depth 2');
+                stockfish.postMessage('go depth 20');
                 setMoveIndex(moveIndex - 1);
             }
-        };
-
+        }, [moveIndex, stockfish]);
+        
         const handleReset = () => {
             chessRef.current.reset();
             setPosition(chessRef.current.fen());
             setMoveIndex(0);
             stockfish.postMessage(chessRef.current.fen());
-            stockfish.postMessage('go depth 2');
+            stockfish.postMessage('go depth 20');
         };
-
+        useEffect(() => {
+            const handleKeydown = (e) => {
+                if (e.key === "ArrowRight") {
+                    handleForward();
+                }
+                if (e.key === "ArrowLeft") {
+                    handleBackward();
+                }
+            };
+            window.addEventListener("keydown", handleKeydown);
+            return () => {
+                window.removeEventListener("keydown", handleKeydown);
+            };
+        }, [handleForward, handleBackward]);
         if (!match) return <div>Loading...</div>;
 
         return (<div className="flex">
