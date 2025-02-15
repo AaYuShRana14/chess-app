@@ -12,21 +12,21 @@ import {
   AvatarBadge,
   Center,
   ChakraProvider,
-} from '@chakra-ui/react';
-import { useEffect, useState, useRef } from 'react';
-import axios from 'axios';
+} from "@chakra-ui/react";
+import { useEffect, useState, useRef } from "react";
+import axios from "axios";
 
 export default function UpdateProfile() {
   const [user, setUser] = useState({});
-  const token = localStorage.getItem('chess-app-token');
-  const [handlename, setHandlename] = useState('');
+  const token = localStorage.getItem("chess-app-token");
+  const [handlename, setHandlename] = useState("");
   const cloudinaryRef = useRef();
   const widgetRef = useRef();
-  const [avatar, setAvatar] = useState('');
+  const [avatar, setAvatar] = useState("");
 
   useEffect(() => {
     if (!token) {
-      window.location.href = '/signin';
+      window.location.href = "/signin";
     }
 
     async function getUser() {
@@ -51,12 +51,12 @@ export default function UpdateProfile() {
     cloudinaryRef.current = window.cloudinary;
     widgetRef.current = cloudinaryRef.current.createUploadWidget(
       {
-        cloudName: 'dli5g7kbs',
-        uploadPreset: 'ltcyvgkv',
+        cloudName: "dli5g7kbs",
+        uploadPreset: "ltcyvgkv",
       },
       (err, result) => {
-        if (result.event === 'success') {
-          setAvatar(result.info.secure_url); 
+        if (result.event === "success") {
+          setAvatar(result.info.secure_url);
         }
       }
     );
@@ -69,15 +69,15 @@ export default function UpdateProfile() {
         {
           handlename,
           avatar,
-        }, 
+        },
         {
           headers: {
             Authorization: `Bearer ${token}`,
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
           },
         }
       );
-      window.location.href = '/';
+      window.location.href = "/";
     } catch (err) {
       console.error(err);
     }
@@ -110,12 +110,12 @@ export default function UpdateProfile() {
           p={6}
           my={12}
         >
-          <Heading lineHeight={1.1} fontSize={{ base: '2xl', sm: '3xl' }}>
+          <Heading lineHeight={1.1} fontSize={{ base: "2xl", sm: "3xl" }}>
             {user.name}
           </Heading>
           <FormControl id="userName">
             <FormLabel>Profile Picture</FormLabel>
-            <Stack direction={['column', 'row']} spacing={6}>
+            <Stack direction={["column", "row"]} spacing={6}>
               <Center>
                 <Avatar size="xl" src={avatar}>
                   <AvatarBadge size="m" rounded="full" top="100px" />
@@ -133,7 +133,7 @@ export default function UpdateProfile() {
             <FormLabel>Handle Name</FormLabel>
             <Input
               placeholder={user.handlename}
-              _placeholder={{ color: 'gray.500' }}
+              _placeholder={{ color: "gray.500" }}
               type="text"
               value={handlename}
               onChange={handleHandlenameChange}
@@ -166,17 +166,16 @@ export default function UpdateProfile() {
               Losses:
             </Text>
             <Text fontSize="lg">{user.totalMatches - user.totalWins}</Text>
-
           </FormControl>
-          <Stack spacing={6} direction={['column', 'row']}>
+          <Stack spacing={6} direction={["column", "row"]}>
             <Button
-              bg={'red.500'}
-              color={'white'}
+              bg={"red.500"}
+              color={"white"}
               w="full"
               _hover={{ bg: 'red.400' }}
               onClick={() => {
-                localStorage.removeItem('chess-app-token');
-                window.location.href = '/signin';
+                localStorage.removeItem("chess-app-token");
+                window.location.href = "/signin";
               }}
             >
              Logout

@@ -14,6 +14,7 @@ export const GameHandler = () => {
   const [gameStarted, setGameStarted] = useState(false);
   const [chats, setChats] = useState([]);
   const [startTimer, setStartTimer] = useState(false);
+  const [onlineCount, setOnlineCount] = useState(0);
   const [gameover, setGameover] = useState(false);
   const [opponent, setOpponent] = useState({
     name: "Opponent",
@@ -35,11 +36,17 @@ export const GameHandler = () => {
 
     socket.onmessage = (message) => {
       const data = JSON.parse(message.data);
-      console.log(data);
+      if (data.type === "onlineCount") {
+        setOnlineCount(data.count);
+      }
       if (data.type === "start") {
         setChats([]);
         axios
+<<<<<<< HEAD
         .get(`http://localhost:8000/profile/${data.opponent.id}`)
+=======
+          .get(`http://localhost:8000/profile/${data.opponent.id}`)
+>>>>>>> a2e275a918fd78965a0329b586bc2215685efcdb
           .then((res) => {
             setOpponent({
               name: res.data.name,
@@ -62,7 +69,11 @@ export const GameHandler = () => {
       }
       if (data.type === "Reconnect") {
         axios
+<<<<<<< HEAD
         .get(`http://localhost:8000/profile/${data.opponent.id}`)
+=======
+          .get(`http://localhost:8000/profile/${data.opponent.id}`)
+>>>>>>> a2e275a918fd78965a0329b586bc2215685efcdb
           .then((res) => {
             setOpponent({
               name: res.data.name,
@@ -80,7 +91,10 @@ export const GameHandler = () => {
         setMoves(chess.history());
       }
       if (data.type === "chat") {
-        setChats((prevChats) => [...prevChats, { message: data.message, sender: "Opponent" }]);
+        setChats((prevChats) => [
+          ...prevChats,
+          { message: data.message, sender: "Opponent" },
+        ]);
       }
     };
   }, [socket, chess]);
@@ -107,7 +121,7 @@ export const GameHandler = () => {
     if (socket) {
       socket.send(JSON.stringify({ type: "create" }));
     } else {
-      console.log("trying to reconnect")
+      console.log("trying to reconnect");
       setTimeout(() => {
         socket.send(JSON.stringify({ type: "create" }));
       }, 500);
@@ -188,6 +202,7 @@ export const GameHandler = () => {
     setGameStarted,
     chats,
     setChats,
+    onlineCount,
     opponent,
     setOpponent,
     chatHandler,

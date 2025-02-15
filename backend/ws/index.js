@@ -1,8 +1,8 @@
-const WebSocketServer = require('ws').WebSocketServer;
 const GameManager = require('./GameManager');
 const Player = require('./Player');
-const wss = new WebSocketServer({ port: 8080 });
+const wss=require('./wss');
 const gameManager = new GameManager();
+const {sendOnlineCount} = require('./cron');
 const Auth = require('./Auth');
 const url = require('url');
 require('dotenv').config();
@@ -24,3 +24,4 @@ wss.on('connection', async(ws, req) => {
         gameManager.removeUser(player);
     });
 });
+sendOnlineCount();
