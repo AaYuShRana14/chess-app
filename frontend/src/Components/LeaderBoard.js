@@ -9,6 +9,8 @@ const Leaderboard = () => {
     const navigate = useNavigate();
     const [pageNumber, setPageNumber] = useState(Number(page) || 1);
     const [users, setUsers] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [menuOpen, setMenuOpen] = useState(false);
 
     useEffect(() => {
         if (page) {
@@ -18,14 +20,24 @@ const Leaderboard = () => {
 
     useEffect(() => {
         const fetchUsers = async () => {
+            setLoading(true);
             try {
                 const fetchedUsers = await axios.get(`http://localhost:8000/leaderboard/${pageNumber}`);
                 setUsers(fetchedUsers.data);
+                setLoading(false);
             } catch (err) {
                 console.error(err);
+                setLoading(false);
             }
         };
         fetchUsers();
+    }, [pageNumber]);
+
+    // Close menu when navigating
+    useEffect(() => {
+        if (menuOpen) {
+            setMenuOpen(false);
+        }
     }, [pageNumber]);
 
     const handleNextPage = () => {
@@ -42,118 +54,166 @@ const Leaderboard = () => {
         }
     };
 
+    const toggleMenu = () => {
+        setMenuOpen(!menuOpen);
+    };
+
     return (
         <>
+            {/* Mobile Header with Hamburger */}
+            <header className="mobile-header">
+                <div className="mobile-logo">Leaderboard</div>
+                <div className="hamburger-container">
+                    <button 
+                        className={`hamburger-button ${menuOpen ? 'active' : ''}`} 
+                        onClick={toggleMenu}
+                    >
+                        <span className="hamburger-line"></span>
+                        <span className="hamburger-line"></span>
+                        <span className="hamburger-line"></span>
+                    </button>
+                </div>
+            </header>
+
+            {/* Menu Overlay */}
+            <div 
+                className={`menu-overlay ${menuOpen ? 'active' : ''}`} 
+                onClick={toggleMenu}
+            ></div>
+            
+            {/* Mobile Navigation Menu */}
+            <nav className={`mobile-menu ${menuOpen ? 'active' : ''}`}>
+                <div className="mobile-menu-items">
+                    <a href="/leaderboard/1" className="mobile-menu-item active">Leaderboard</a>
+                    <a href="/profile" className="mobile-menu-item">Profile</a>
+                    <a href="/matches" className="mobile-menu-item">Matches</a>
+                    <a href="/statistics" className="mobile-menu-item">Statistics</a>
+                    <a href="/settings" className="mobile-menu-item">Settings</a>
+                </div>
+            </nav>
+
+            {/* Regular Navbar for Desktop */}
             <Navbar />
-            <div className="text-white md:mt-20 mt-14 mb-10 bg-gradient-to-r from-indigo-500 to-purple-500 p-5 md:p-10 rounded-xl">
-                <h1 className="text-center text-3xl md:text-4xl py-6 font-bold">Leaderboard</h1>
-                <div className="bg-white px-5 md:px-16 py-8 rounded-lg shadow-lg backdrop-filter backdrop-blur-lg bg-opacity-30 ">
+            
+            <div className="leaderboard-container">
+                <h1 className="leaderboard-title">Leaderboard</h1>
+                <div className="leaderboard-board">
                     {/* Column Headings */}
-                    <div className="grid md:grid-cols-5 grid-cols-3 font-bold text-gray-700 text-base md:text-lg border-b pb-2 mx-2 md:mx-4 mb-6 ">
-                        <div className="flex items-center">Rank</div>
-                        <div className="flex items-center">Handle Name</div>
-                        <div className="hidden md:flex items-center">Matches</div>
-                        <div className="hidden md:flex items-center">Wins</div>
-                        <div className="flex items-center justify-end">Rating</div>
+                    <div className="leaderboard-headers">
+                        <div>Rank</div>
+                        <div>Handle Name</div>
+                        <div className="matches-column">Matches</div>
+                        <div className="wins-column">Wins</div>
+                        <div style={{ textAlign: 'right' }}>Rating</div>
                     </div>
 
                     {/* User List */}
                     <div className="space-y-4">
-                        {users.map((user, index) => (
-                            <div
-                                key={index}
-                                className="grid md:grid-cols-5 grid-cols-3 items-center bg-gray-100 p-4 md:p-6 rounded-lg shadow-md backdrop-filter backdrop-blur-lg bg-opacity-40"
-                            >
-                                {/* Rank */}
-                                <div className="flex items-center space-x-4">
-                                    <div
-                                        className={`leaderboard-rank w-12 h-12 flex items-center justify-center ${
-                                            pageNumber === 1 && index < 3
-                                                ? index === 0
-                                                    ? "bg-yellow-400 border-b-4 border-yellow-600"
-                                                    : index === 1
-                                                    ? "bg-slate-400 border-b-4 border-slate-600"
-                                                    : "bg-amber-600 border-b-4 border-amber-800"
-                                                : "bg-gray-400 text-gray-800"
-                                        } font-bold text-white rounded-full`}
-                                    >
-                                        {(pageNumber - 1) * 10 + index + 1}
+                        {loading ? (
+                            // Loading skeletons
+                            Array(10).fill().map((_, index) => (
+                                <div key={index} className="leaderboard-user loading-skeleton">
+                                    <div className="rank-container">
+                                        <div className="leaderboard-rank">&nbsp;</div>
+                                        <div className="user-avatar" style={{ background: 'rgba(255,255,255,0.1)' }}></div>
                                     </div>
-                                    <img
-                                        src="https://th.bing.com/th/id/OIP.G1GZrTRxxTmalTuvu5VYGQHaHa?rs=1&pid=ImgDetMain"
-                                        alt="avatar"
-                                        className="w-12 h-12 rounded"
-                                    />
+                                    <div className="user-name">&nbsp;</div>
+                                    <div className="matches-column">&nbsp;</div>
+                                    <div className="wins-column">&nbsp;</div>
+                                    <div className="user-rating">&nbsp;</div>
                                 </div>
+                            ))
+                        ) : (
+                            users.map((user, index) => {
+                                // Calculate the absolute rank
+                                const absoluteRank = (pageNumber - 1) * 10 + index + 1;
+                                
+                                // Determine rank class based on position
+                                let rankClass = '';
+                                if (pageNumber === 1) {
+                                    if (index === 0) rankClass = 'rank-1';
+                                    else if (index === 1) rankClass = 'rank-2';
+                                    else if (index === 2) rankClass = 'rank-3';
+                                    else rankClass = 'rank-top-10';
+                                } else if (absoluteRank <= 10) {
+                                    rankClass = 'rank-top-10';
+                                } else {
+                                    rankClass = 'rank-regular';
+                                }
+                                
+                                return (
+                                    <div key={index} className="leaderboard-user">
+                                        {/* Rank */}
+                                        <div className="rank-container">
+                                            <div className={`leaderboard-rank ${rankClass}`}>
+                                                {absoluteRank}
+                                            </div>
+                                            <img
+                                                src="https://th.bing.com/th/id/OIP.G1GZrTRxxTmalTuvu5VYGQHaHa?rs=1&pid=ImgDetMain"
+                                                alt="avatar"
+                                                className="user-avatar"
+                                            />
+                                        </div>
 
-                                {/* Handle Name */}
-                                <div className="text-base md:text-lg font-semibold text-gray-600">
-                                    {user.name}
-                                </div>
-                                <div className="hidden md:block text-lg font-semibold text-gray-600">
-                                    {user.totalMatches}
-                                </div>
-                                <div className="hidden md:block text-lg font-semibold text-gray-600">
-                                    {user.totalWins}
-                                </div>
-                                <div className="text-base md:text-lg font-semibold text-gray-600 text-right">
-                                    {user.rating}
-                                </div>
-                            </div>
-                        ))}
+                                        {/* Handle Name */}
+                                        <div className="user-name">
+                                            {user.name}
+                                        </div>
+                                        <div className="matches-column">
+                                            {user.totalMatches}
+                                        </div>
+                                        <div className="wins-column">
+                                            {user.totalWins}
+                                        </div>
+                                        <div className="user-rating">
+                                            {user.rating}
+                                        </div>
+                                    </div>
+                                );
+                            })
+                        )}
                     </div>
                 </div>
 
                 {/* Pagination Controls */}
-                <div className="p-5">
-                    <div className="flex justify-center items-baseline flex-wrap">
-                        <div className="flex m-2">
-                            <button
-                                onClick={handlePrevPage}
-                                className="text-base rounded-r-none hover:scale-110 focus:outline-none flex justify-center px-4 py-2 rounded font-bold cursor-pointer 
-                                hover:bg-gray-200 bg-gray-100 text-indigo-700 border duration-200 ease-in-out border-indigo-600 transition"
-                            >
-                                <div className="flex leading-5">
-                                    <svg
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        width="100%"
-                                        height="100%"
-                                        fill="none"
-                                        viewBox="0 0 24 24"
-                                        stroke="currentColor"
-                                        strokeWidth="2"
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        className="feather feather-chevron-left w-5 h-5"
-                                    >
-                                        <polyline points="15 18 9 12 15 6"></polyline>
-                                    </svg>
-                                </div>
-                            </button>
-                            <button
-                                onClick={handleNextPage}
-                                className="text-base rounded-l-none border-l-0 hover:scale-110 focus:outline-none flex justify-center px-4 py-2 rounded font-bold cursor-pointer 
-                                hover:bg-gray-200 bg-gray-100 text-indigo-700 border duration-200 ease-in-out border-indigo-600 transition"
-                            >
-                                <div className="flex leading-5">
-                                    <svg
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        width="100%"
-                                        height="100%"
-                                        fill="none"
-                                        viewBox="0 0 24 24"
-                                        stroke="currentColor"
-                                        strokeWidth="2"
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        className="feather feather-chevron-right w-5 h-5 ml-1"
-                                    >
-                                        <polyline points="9 18 15 12 9 6"></polyline>
-                                    </svg>
-                                </div>
-                            </button>
-                        </div>
-                    </div>
+                <div className="pagination">
+                    <button
+                        onClick={handlePrevPage}
+                        disabled={pageNumber <= 1}
+                        className="pagination-button prev-button"
+                    >
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="24"
+                            height="24"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                        >
+                            <polyline points="15 18 9 12 15 6"></polyline>
+                        </svg>
+                    </button>
+                    <button
+                        onClick={handleNextPage}
+                        className="pagination-button next-button"
+                    >
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="24"
+                            height="24"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                        >
+                            <polyline points="9 18 15 12 9 6"></polyline>
+                        </svg>
+                    </button>
                 </div>
             </div>
         </>

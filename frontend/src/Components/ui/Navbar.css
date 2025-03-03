@@ -25,17 +25,19 @@
   text-decoration: none;
   display: flex;
   align-items: center;
-  svg {
-    animation: flip 0.7s ease-in-out 3;
-    height: 50px;
-    width: 50px;
-  }
-  h1 {
-    margin-left: 1rem;
-    position: relative;
-    font-weight: bold;
-    top: 5px;
-  }
+}
+
+.navbar-logo svg {
+  animation: flip 0.7s ease-in-out 3;
+  height: 50px;
+  width: 50px;
+}
+
+.navbar-logo h1 {
+  margin-left: 1rem;
+  position: relative;
+  font-weight: bold;
+  top: 5px;
 }
 
 @keyframes flip {
@@ -76,66 +78,33 @@
   transition: transform 0.5s;
 }
 
-.navbar-link::after{
-    left: 0;
-    width: 100%;
-    height: 2px;
-    bottom: -10px;
-    transform: scaleX(0);
-    transform-origin: left;
-  }
-  .navbar-link:hover::after{
-      transform: scaleX(1);
-  }
+.navbar-link::after {
+  left: 0;
+  width: 100%;
+  height: 2px;
+  bottom: -10px;
+  transform: scaleX(0);
+  transform-origin: left;
+}
 
-@media screen and (max-width: 768px) {
+.navbar-link:hover::after {
+  transform: scaleX(1);
+}
 
-    .navbar {
-      padding: 0.5rem; 
-    }
-    
-    .navbar-container {
-      padding: 0 1rem;
-      align-items: center; 
-    }
-  
-    .navbar-menu {
-      margin-top: 0rem; 
-    }
-  
-    .navbar-item {
-      margin: 0;
-    }
-  
-    .navbar-link {
-      font-size: 0.65rem; 
-      padding: 2px 0.1rem 0rem 2px;
-      margin: 0; 
-      top: 4px;
-    }
+/* For the active or clicked link */
+.navbar-link.active::after {
+  transform: scaleX(1);
+}
 
-    .navbar-link::after {
-        bottom: -5px;
-        height: 1px;
-    }
-
-    .navbar-link::before {
-        display: none;
-    }
-
-
-
-    .navbar-logo {
-        font-size: 1.2rem;
-        svg {
-            height: 24px;
-            width: 24px;
-        }
-        h1 {
-            margin-left: 0.5rem;
-        }
-    }
-
+/* Mobile menu toggle button - hidden on desktop */
+.mobile-menu-button {
+  display: none;
+  background: none;
+  border: none;
+  color: white;
+  font-size: 24px;
+  cursor: pointer;
+  z-index: 101;
 }
 
 .cta {
@@ -170,7 +139,7 @@
   margin-right: 0px;
 }
 
-.cta:hover  .second {
+.cta:hover .second {
   transition: 0.5s;
   margin-right: 45px;
 }
@@ -214,18 +183,109 @@
   0% {
     fill: white;
   }
-
   50% {
     fill: #FBC638;
   }
-
   100% {
     fill: white;
   }
 }
-/* For the active or clicked link */
-.navbar-link.active::after {
-  transform: scaleX(1);
+
+/* Only apply these mobile styles at smaller screen sizes */
+@media screen and (max-width: 768px) {
+  .navbar {
+    padding: 0.5rem;
+  }
+
+  .navbar-container {
+    padding: 0 1rem;
+    align-items: center;
+  }
+
+  /* Show mobile menu button */
+  .mobile-menu-button {
+    display: block;
+  }
+
+  /* Mobile menu - off-screen by default */
+  .navbar-menu {
+    position: fixed;
+    top: 0;
+    right: -100%;
+    height: 100vh;
+    width: 70%;
+    max-width: 300px;
+    background-color: rgba(0, 0, 0, 0.95);
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    transition: right 0.3s ease-in-out;
+    margin: 0;
+    padding: 2rem 0;
+    gap: 0;
+  }
+
+  /* Show mobile menu when active */
+  .navbar-menu.active {
+    right: 0;
+  }
+
+  .navbar-item {
+    margin: 1rem 0;
+    width: 100%;
+    text-align: center;
+  }
+
+  .navbar-link {
+    font-size: 0.65rem;
+    padding: 2px 0.1rem 0rem 2px;
+    margin: 0;
+    top: 4px;
+    display: block;
+  }
+
+  .navbar-link::after {
+    bottom: -5px;
+    height: 1px;
+  }
+
+  .navbar-link::before {
+    display: none;
+  }
+
+  .navbar-logo {
+    font-size: 1.2rem;
+  }
+  
+  .navbar-logo svg {
+    height: 24px;
+    width: 24px;
+  }
+  
+  .navbar-logo h1 {
+    margin-left: 0.5rem;
+  }
+  
+  /* Adjust CTA button for mobile */
+  .cta {
+    padding: 8px 20px;
+    font-size: 18px;
+    margin-bottom: 1rem;
+    box-shadow: 4px 4px 0 black;
+  }
+  
+  .cta:hover {
+    box-shadow: 6px 6px 0 #FBC638;
+  }
 }
 
-
+/* Extra small devices */
+@media screen and (max-width: 480px) {
+  .navbar-menu {
+    width: 85%;
+  }
+  
+  .navbar-link {
+    font-size: 0.6rem;
+  }
+}

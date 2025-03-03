@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from "react";
 import "./Navbar.css";
 import { NavLink } from "react-router-dom";
+
 const Navbar = () => {
   const [scrolling, setScrolling] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -19,6 +22,54 @@ const Navbar = () => {
     };
   }, []);
 
+  // Handle resize to detect mobile vs desktop
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+      if (window.innerWidth > 768) {
+        setMobileMenuOpen(false);
+      }
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
+  // Close mobile menu when clicking outside
+  useEffect(() => {
+    if (!isMobile) return;
+    
+    const handleClickOutside = (event) => {
+      if (mobileMenuOpen && !event.target.closest('.navbar-menu') && !event.target.closest('.mobile-menu-button')) {
+        setMobileMenuOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [mobileMenuOpen, isMobile]);
+
+  // Prevent scrolling when mobile menu is open
+  useEffect(() => {
+    if (mobileMenuOpen && isMobile) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'auto';
+    }
+    
+    return () => {
+      document.body.style.overflow = 'auto';
+    };
+  }, [mobileMenuOpen, isMobile]);
+
+  const toggleMobileMenu = () => {
+    setMobileMenuOpen(!mobileMenuOpen);
+  };
+
   return (
     <nav className={`navbar ${scrolling ? "navbar-scrolling" : ""}`}>
       <div className="navbar-container">
@@ -31,41 +82,74 @@ const Navbar = () => {
           </svg>
           <h1>Chessmate</h1>
         </NavLink>
-        <ul className="navbar-menu">
+
+        <button 
+          className="mobile-menu-button" 
+          onClick={toggleMobileMenu} 
+          aria-label="Toggle menu"
+        >
+          {mobileMenuOpen ? "✕" : "☰"}
+        </button>
+
+        <ul className={`navbar-menu ${mobileMenuOpen ? "active" : ""}`}>
           {localStorage.getItem("chess-app-token") ? (
             <>
               <li className="navbar-item">
-                <NavLink to="/updateProfile" className="navbar-link">
+                <NavLink 
+                  to="/updateProfile" 
+                  className={({isActive}) => isActive ? "navbar-link active" : "navbar-link"}
+                  onClick={() => isMobile && setMobileMenuOpen(false)}
+                >
                   Profile
                 </NavLink>
               </li>
               <li className="navbar-item">
-                <NavLink to="/leaderboard" className="navbar-link">
+                <NavLink 
+                  to="/leaderboard" 
+                  className={({isActive}) => isActive ? "navbar-link active" : "navbar-link"}
+                  onClick={() => isMobile && setMobileMenuOpen(false)}
+                >
                   Leaderboard
                 </NavLink>
               </li>
               <li className="navbar-item">
-                <NavLink to="/history" className="navbar-link">
+                <NavLink 
+                  to="/history" 
+                  className={({isActive}) => isActive ? "navbar-link active" : "navbar-link"}
+                  onClick={() => isMobile && setMobileMenuOpen(false)}
+                >
                   History
                 </NavLink>
               </li>
               <li className="navbar-item">
-                <a href="/game" className="navbar-link">
+                <NavLink 
+                  to="/game" 
+                  className="navbar-link"
+                  onClick={() => isMobile && setMobileMenuOpen(false)}
+                >
                   Play
-                </a>
+                </NavLink>
               </li>
             </>
           ) : (
             <>
               <li className="navbar-item">
-                <a href="/signin" className="navbar-link">
+                <NavLink 
+                  to="/signin" 
+                  className={({isActive}) => isActive ? "navbar-link active" : "navbar-link"}
+                  onClick={() => isMobile && setMobileMenuOpen(false)}
+                >
                   Sign In
-                </a>
+                </NavLink>
               </li>
               <li className="navbar-item">
-                <a href="/signup" className="navbar-link">
+                <NavLink 
+                  to="/signup" 
+                  className={({isActive}) => isActive ? "navbar-link active" : "navbar-link"}
+                  onClick={() => isMobile && setMobileMenuOpen(false)}
+                >
                   Sign Up
-                </a>
+                </NavLink>
               </li>
             </>
           )}
