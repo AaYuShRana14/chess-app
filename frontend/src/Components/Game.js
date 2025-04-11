@@ -40,6 +40,7 @@ const Game = () => {
     highlightSquares,
     squareClick,
     startTimer,
+    chess,
     setStartTimer,
     onlineCount,
   } = GameHandler();
@@ -119,6 +120,7 @@ const Game = () => {
           playerRef2={playerRef2}
           playerColor={playerColor}
           position={position}
+          chess={chess}
           optionSquares={optionSquares}
           checkDrop={checkDrop}
           highlightSquares={highlightSquares}
