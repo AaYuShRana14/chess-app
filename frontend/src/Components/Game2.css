@@ -7,7 +7,44 @@
 
 .sub-main {
     display: flex;
-    
+    position: relative;
+}
+
+.online-count {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    background-color: #2c3e50;
+    color: #ecf0f1;
+    border-radius: 8px;
+    padding: 6px 12px;
+    font-size: 14px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+.online-count::before {
+    content: "👥 Online: ";
+    margin-right: 5px;
+}
+
+@keyframes pulse {
+    0% { opacity: 0.8; }
+    50% { opacity: 1; }
+    100% { opacity: 0.8; }
+}
+
+.online-count::after {
+    content: "";
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: #2ecc71;
+    margin-left: 8px;
+    animation: pulse 2s infinite ease-in-out;
 }
 
 @media screen and (max-width: 768px) {
@@ -15,5 +52,12 @@
         flex-direction: column;
         width: 95%;
         align-items: center;
+    }
+    
+    .online-count {
+        bottom: 10px;
+        right: 10px;
+        font-size: 12px;
+        padding: 4px 8px;
     }
 }

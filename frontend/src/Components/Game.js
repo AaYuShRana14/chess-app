@@ -135,7 +135,7 @@ const Game = () => {
           me={me}
           chatSend={chatSend}
         />
-        <div>{onlineCount}</div>
+        <div className="online-count">{onlineCount}</div>
       </div>
     </div>
   );
