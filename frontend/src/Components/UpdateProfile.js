@@ -12,21 +12,22 @@ import {
   AvatarBadge,
   Center,
   ChakraProvider,
-} from '@chakra-ui/react';
-import { useEffect, useState, useRef } from 'react';
-import axios from 'axios';
+} from "@chakra-ui/react";
+import { useEffect, useState, useRef } from "react";
+import axios from "axios";
+import Navbar from "./ui/Navbar";
 
 export default function UpdateProfile() {
   const [user, setUser] = useState({});
-  const token = localStorage.getItem('chess-app-token');
-  const [handlename, setHandlename] = useState('');
+  const token = localStorage.getItem("chess-app-token");
+  const [handlename, setHandlename] = useState("");
   const cloudinaryRef = useRef();
   const widgetRef = useRef();
-  const [avatar, setAvatar] = useState('');
+  const [avatar, setAvatar] = useState("");
 
   useEffect(() => {
     if (!token) {
-      window.location.href = '/signin';
+      window.location.href = "/signin";
     }
 
     async function getUser() {
@@ -51,12 +52,12 @@ export default function UpdateProfile() {
     cloudinaryRef.current = window.cloudinary;
     widgetRef.current = cloudinaryRef.current.createUploadWidget(
       {
-        cloudName: 'dli5g7kbs',
-        uploadPreset: 'ltcyvgkv',
+        cloudName: "dli5g7kbs",
+        uploadPreset: "ltcyvgkv",
       },
       (err, result) => {
-        if (result.event === 'success') {
-          setAvatar(result.info.secure_url); 
+        if (result.event === "success") {
+          setAvatar(result.info.secure_url);
         }
       }
     );
@@ -69,15 +70,15 @@ export default function UpdateProfile() {
         {
           handlename,
           avatar,
-        }, 
+        },
         {
           headers: {
             Authorization: `Bearer ${token}`,
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
           },
         }
       );
-      window.location.href = '/';
+      window.location.href = "/";
     } catch (err) {
       console.error(err);
     }
@@ -93,35 +94,38 @@ export default function UpdateProfile() {
 
   return (
     <ChakraProvider>
+    <Navbar />  
       <Flex
         minH={'100vh'}
+        color={'white'}
         align={'center'}
         justify={'center'}
-        bg={useColorModeValue('gray.50', 'gray.800')}
+        bg={'#1C2944'}
       >
         <Stack
           spacing={4}
           w={'full'}
           maxW={'md'}
-          bg={useColorModeValue('white', 'gray.700')}
+          bg={'#253554'}
           rounded={'xl'}
           boxShadow={'lg'}
           p={6}
           my={12}
+          mt={"5rem"}
         >
-          <Heading lineHeight={1.1} fontSize={{ base: '2xl', sm: '3xl' }}>
+          <Heading lineHeight={1.1} fontSize={{ base: "2xl", sm: "3xl" }}>
             {user.name}
           </Heading>
           <FormControl id="userName">
             <FormLabel>Profile Picture</FormLabel>
-            <Stack direction={['column', 'row']} spacing={6}>
+            <Stack direction={["column", "row"]} spacing={6}>
               <Center>
                 <Avatar size="xl" src={avatar}>
                   <AvatarBadge size="m" rounded="full" top="100px" />
                 </Avatar>
               </Center>
               <Center w="full">
-                <Button w="full" onClick={() => widgetRef.current.open()}>
+                <Button bg={'#546A94'} _hover={{ bg: '#43597A' }} color={'white'} w="full" onClick={() => widgetRef.current.open()}>
                   Change Picture
                 </Button>
               </Center>
@@ -131,7 +135,7 @@ export default function UpdateProfile() {
             <FormLabel>Handle Name</FormLabel>
             <Input
               placeholder={user.handlename}
-              _placeholder={{ color: 'gray.500' }}
+              _placeholder={{ color: "gray.500" }}
               type="text"
               value={handlename}
               onChange={handleHandlenameChange}
@@ -160,34 +164,38 @@ export default function UpdateProfile() {
               Wins:
             </Text>
             <Text fontSize="lg">{user.totalWins}</Text>
+            <Text fontSize="lg" fontWeight="bold">
+              Losses:
+            </Text>
+            <Text fontSize="lg">{user.totalMatches - user.totalWins}</Text>
           </FormControl>
-          <Stack spacing={6} direction={['column', 'row']}>
+          <Stack spacing={6} direction={["column", "row"]}>
             <Button
-              bg={'red.400'}
-              color={'white'}
+              bg={"#D9534F"}
+              color={"white"}
               w="full"
-              _hover={{ bg: 'blue.500' }}
+              _hover={{ bg: '#C9302C' }}
               onClick={() => {
-                localStorage.removeItem('chess-app-token');
-                window.location.href = '/signin';
+                localStorage.removeItem("chess-app-token");
+                window.location.href = "/signin";
               }}
             >
-             logout
+             Logout
             </Button>
             <Button
-              bg={'blue.400'}
+              bg={'#546A94'}
               color={'white'}
               w="full"
-              _hover={{ bg: 'blue.500' }}
+              _hover={{ bg: '#43597A' }}
               onClick={updateHandler}
             >
               Update
             </Button>
             <Button
-              bg={'blue.400'}
+              bg={'#1C2944'}
               color={'white'}
               w="full"
-              _hover={{ bg: 'blue.500' }}
+              _hover={{ bg: '#253554' }}
               onClick={() => (window.location.href = '/')}
             >
               Home
@@ -197,4 +205,4 @@ export default function UpdateProfile() {
       </Flex>
     </ChakraProvider>
   );
-}
+} 

@@ -1,6 +1,6 @@
 const Chess = require('chess.js').Chess;
 const updateStatus = require("./updateStatus.js");
-require('dotenv').config();
+require("dotenv").config();
 
 class Game {
     constructor(p1, p2, removeGameInstanceCallback) {

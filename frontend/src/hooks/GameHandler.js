@@ -14,6 +14,7 @@ export const GameHandler = () => {
   const [gameStarted, setGameStarted] = useState(false);
   const [chats, setChats] = useState([]);
   const [startTimer, setStartTimer] = useState(false);
+  const [onlineCount, setOnlineCount] = useState(0);
   const [gameover, setGameover] = useState(false);
   const [opponent, setOpponent] = useState({
     name: "Opponent",
@@ -35,7 +36,9 @@ export const GameHandler = () => {
 
     socket.onmessage = (message) => {
       const data = JSON.parse(message.data);
-      console.log(data);
+      if (data.type === "onlineCount") {
+        setOnlineCount(data.count);
+      }
       if (data.type === "start") {
         setChats([]);
         axios
@@ -64,9 +67,7 @@ export const GameHandler = () => {
       }
       if (data.type === "Reconnect") {
         axios
-          .get(
-            `https://chess-app-opin.onrender.com/profile/${data.opponent.id}`
-          )
+          .get(`https://chess-app-opin.onrender.com/profile/${data.opponent.id}`)
           .then((res) => {
             setOpponent({
               name: res.data.name,
@@ -84,6 +85,10 @@ export const GameHandler = () => {
         setMoves(chess.history());
       }
       if (data.type === "chat") {
+        setChats((prevChats) => [
+          ...prevChats,
+          { message: data.message, sender: "Opponent" },
+        ]);
         setChats((prevChats) => [
           ...prevChats,
           { message: data.message, sender: "Opponent" },
@@ -195,6 +200,7 @@ export const GameHandler = () => {
     setGameStarted,
     chats,
     setChats,
+    onlineCount,
     opponent,
     setOpponent,
     chatHandler,
@@ -209,3 +215,5 @@ export const GameHandler = () => {
     chess,
   };
 };
+
+

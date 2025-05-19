@@ -42,6 +42,7 @@ const Game = () => {
     startTimer,
     chess,
     setStartTimer,
+    onlineCount,
   } = GameHandler();
 
   const chatSend = (message) => {
@@ -109,8 +110,8 @@ const Game = () => {
   }, []);
 
   return (
-    <div className="main">
-      {confetti && <Confetti width={width} height={height} />}
+    <div className="main p-16 mt-12">
+      {confetti && <Confetti width={width} height={height}/>}
       <div className="sub-main">
         <Board
           me={me}
@@ -134,6 +135,7 @@ const Game = () => {
           me={me}
           chatSend={chatSend}
         />
+        <div className="online-count">{onlineCount}</div>
       </div>
     </div>
   );
