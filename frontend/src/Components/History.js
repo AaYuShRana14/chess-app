@@ -13,7 +13,7 @@ const History = () => {
     const [userid, setUserid] = useState("");
 
     useEffect(() => {
-        axios.get("http://localhost:8000/profile/me", {
+        axios.get("https://chess-app-opin.onrender.com/profile/me", {
             headers: {
                 Authorization: `Bearer ${token}`,
             },
@@ -29,7 +29,7 @@ const History = () => {
 
     useEffect(() => {
         if (userid) {
-            axios.get(`http://localhost:8000/history/${userid}`)
+            axios.get(`https://chess-app-opin.onrender.com/history/${userid}`)
                 .then((response) => {
                     const data = response.data;
                     if (data) {

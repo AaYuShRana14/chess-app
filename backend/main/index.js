@@ -25,5 +25,5 @@ app.use("/leaderboard", require("./Routes/leaderboard"));
 app.use("/history", require("./Routes/history"));
 app.use("/match", require("./Routes/match"));
 app.listen(8000, () => {
-  console.log("Server started on http://localhost:8000");
+  console.log("Server started on https://chess-app-opin.onrender.com");
 });

@@ -22,7 +22,7 @@ const Leaderboard = () => {
         const fetchUsers = async () => {
             setLoading(true);
             try {
-                const fetchedUsers = await axios.get(`http://localhost:8000/leaderboard/${pageNumber}`);
+                const fetchedUsers = await axios.get(`https://chess-app-opin.onrender.com/leaderboard/${pageNumber}`);
                 setUsers(fetchedUsers.data);
                 setLoading(false);
             } catch (err) {

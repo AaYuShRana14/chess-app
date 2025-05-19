@@ -59,7 +59,7 @@ const Analyse = () => {
 
     useEffect(() => {
         if (matchId) {
-            axios.get(`http://localhost:8000/match/${matchId}`)
+            axios.get(`https://chess-app-opin.onrender.com/match/${matchId}`)
                 .then((response) => {
                     if (response.data) {
                         setMatch(response.data);
