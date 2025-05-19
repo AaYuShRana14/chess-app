@@ -149,7 +149,7 @@ const Leaderboard = () => {
                                                 {absoluteRank}
                                             </div>
                                             <img
-                                                src="https://th.bing.com/th/id/OIP.G1GZrTRxxTmalTuvu5VYGQHaHa?rs=1&pid=ImgDetMain"
+                                                src={user.avatar}
                                                 alt="avatar"
                                                 className="user-avatar"
                                             />
