@@ -21,7 +21,7 @@
   
   .leaderboard-title {
     text-align: center;
-    font-size: 1.875rem;
+    font-size: 3rem;
     padding-top: 1.5rem;
     padding-bottom: 1.5rem;
     font-weight: 700;
@@ -37,7 +37,7 @@
     border-radius: 0.5rem;
     box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
     backdrop-filter: blur(10px);
-    background-opacity: 0.3;
+    background-attachment: 0.3;
     max-width: 100%;
     overflow-x: hidden;
     border: 1px solid rgba(242, 245, 245, 0.1);
@@ -358,7 +358,7 @@
     }
     
     .leaderboard-title {
-      font-size: 2.25rem;
+      font-size: 3rem;
     }
     
     .leaderboard-board {

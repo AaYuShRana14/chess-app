@@ -68,8 +68,8 @@ export const Board = (props) => {
         />
       </div>
       <div className="controls">
-        <button onClick={moveToPreviousPosition}>Previous</button>
-        <button onClick={moveToNextPosition}>Next</button>
+        <button onClick={moveToPreviousPosition}>{"<"}</button>
+        <button onClick={moveToNextPosition}>{">"}</button>
       </div>
       <Player player={props.me} ref={props.playerRef2} />
     </div>

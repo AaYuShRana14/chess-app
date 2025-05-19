@@ -58,11 +58,11 @@ const History = () => {
     return (
         <div>
             <Navbar />
-            <div className="text-white md:mt-20 mt-14 mb-10 bg-gradient-to-b from-indigo-500 to-purple-500 p-5 md:p-10 rounded-xl">
-                <h1 className="text-center  text-4xl py-10 font-bold">Game History</h1>
+            <div className="text-white md:mt-20 mt-14 mb-10 p-5 md:p-10 rounded-xl">
+                <h1 className="text-center text-4xl py-10 font-bold">Game History</h1>
                 <div className="overflow-x-auto">
                     <table className="min-w-full table-auto rounded-lg shadow-md">
-                        <thead className="bg-gradient-to-r from-purple-600 to-indigo-700 ">
+                        <thead className="bg-[#1C2944] text-white">
                             <tr>
                                 <th className="px-4 py-3 text-left">#</th>
                                 <th className="px-4 py-3 text-left">Date</th>
@@ -72,15 +72,15 @@ const History = () => {
                                 <th className="px-4 py-3 text-center">Actions</th>
                             </tr>
                         </thead>
-                        <tbody className="text-gray-700 backdrop-filter backdrop-blur-lg bg-opacity-30">
+                        <tbody className="bg-[#1C2944] text-white">
                             {history.map((game, index) => (
                                 <tr
                                     key={index}
-                                    className= {`${
-                                        index % 2 === 0 ? "bg-white backdrop-filter backdrop-blur-lg bg-opacity-60" : "bg-white backdrop-filter backdrop-blur-lg bg-opacity-50"
+                                    className={`${
+                                        index % 2 === 0 ? "bg-opacity-70" : "bg-opacity-60"
                                     }`}
                                 >
-                                    <td className="px-4 py-3 ">{index + 1}</td>
+                                    <td className="px-4 py-3">{index + 1}</td>
                                     <td className="px-4 py-3">{formatDateTime(game.date)}</td>
                                     <td className="px-4 py-3">{game.black.name}</td>
                                     <td className="px-4 py-3">{game.white.name}</td>

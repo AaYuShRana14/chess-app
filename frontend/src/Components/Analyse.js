@@ -136,9 +136,10 @@ const Analyse = () => {
         }, [handleForward, handleBackward]);
         if (!match) return <div>Loading...</div>;
 
-        return (<div className="flex">
+        return (
+        <div className="flex">
             
-            <div className="">
+            <div className="flex flex-col gap-4">
                 <div className="player-info">
 
                     {match.white.avatar ? (
@@ -185,7 +186,7 @@ const Analyse = () => {
                             onClick={handleBackward}
                             className="control-button"
                         >
-                            Backward
+                            {"<"}
                         </button>
                         <button
                             onClick={handleReset}
@@ -197,7 +198,7 @@ const Analyse = () => {
                             onClick={handleForward}
                             className="control-button"
                         >
-                            Forward
+                            {">"}
                         </button>
                     </div>
                 </div>

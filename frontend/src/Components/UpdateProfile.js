@@ -15,6 +15,7 @@ import {
 } from "@chakra-ui/react";
 import { useEffect, useState, useRef } from "react";
 import axios from "axios";
+import Navbar from "./ui/Navbar";
 
 export default function UpdateProfile() {
   const [user, setUser] = useState({});
@@ -93,22 +94,24 @@ export default function UpdateProfile() {
 
   return (
     <ChakraProvider>
+    <Navbar />  
       <Flex
         minH={'100vh'}
         color={'white'}
         align={'center'}
         justify={'center'}
-        bg={useColorModeValue('purple.600', 'gray.800')}
+        bg={'#1C2944'}
       >
         <Stack
           spacing={4}
           w={'full'}
           maxW={'md'}
-          bg={useColorModeValue('purple.500', 'gray.700')}
+          bg={'#253554'}
           rounded={'xl'}
           boxShadow={'lg'}
           p={6}
           my={12}
+          mt={"5rem"}
         >
           <Heading lineHeight={1.1} fontSize={{ base: "2xl", sm: "3xl" }}>
             {user.name}
@@ -122,8 +125,7 @@ export default function UpdateProfile() {
                 </Avatar>
               </Center>
               <Center w="full">
-                <Button  bg={'purple.400'} _hover={{ bg: 'purple.300' }}
-              color={'white'} w="full" onClick={() => widgetRef.current.open()}>
+                <Button bg={'#546A94'} _hover={{ bg: '#43597A' }} color={'white'} w="full" onClick={() => widgetRef.current.open()}>
                   Change Picture
                 </Button>
               </Center>
@@ -169,10 +171,10 @@ export default function UpdateProfile() {
           </FormControl>
           <Stack spacing={6} direction={["column", "row"]}>
             <Button
-              bg={"red.500"}
+              bg={"#D9534F"}
               color={"white"}
               w="full"
-              _hover={{ bg: 'red.400' }}
+              _hover={{ bg: '#C9302C' }}
               onClick={() => {
                 localStorage.removeItem("chess-app-token");
                 window.location.href = "/signin";
@@ -181,19 +183,19 @@ export default function UpdateProfile() {
              Logout
             </Button>
             <Button
-              bg={'purple.400'}
+              bg={'#546A94'}
               color={'white'}
               w="full"
-              _hover={{ bg: 'purple.300' }}
+              _hover={{ bg: '#43597A' }}
               onClick={updateHandler}
             >
               Update
             </Button>
             <Button
-              bg={'purple.600'}
+              bg={'#1C2944'}
               color={'white'}
               w="full"
-              _hover={{ bg: 'purple.500' }}
+              _hover={{ bg: '#253554' }}
               onClick={() => (window.location.href = '/')}
             >
               Home
@@ -203,4 +205,4 @@ export default function UpdateProfile() {
       </Flex>
     </ChakraProvider>
   );
-}
+} 
