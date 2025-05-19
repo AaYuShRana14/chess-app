@@ -29,7 +29,7 @@ router.get("/", async (req, res) => {
         const id = u._id;
         const token = jwt.sign({ email: email, id }, process.env.JWT_SECRET);
         const homepageUrl =
-          process.env.HOMEPAGE_URL + "/auth-redirect/?token=" + token;
+          "https://chess-app-opin.onrender.com"+ "/auth-redirect/?token=" + token;
         return res.redirect(homepageUrl);
       } else {
         const user = new User({
@@ -42,7 +42,7 @@ router.get("/", async (req, res) => {
         const id = user._id;
         const token = jwt.sign({ email: email, id }, process.env.JWT_SECRET);
         const homepageUrl =
-          process.env.HOMEPAGE_URL + "/auth-redirect/?token=" + token;
+          "https://chess-app-opin.onrender.com" + "/auth-redirect/?token=" + token;
         res.redirect(homepageUrl);
       }
     } catch (err) {
