@@ -9,7 +9,11 @@ router.get("/:userid", async (req, res) => {
             return res.status(404).send({ error: "User not found" });
         }
         const populatedUser = await user.populate('matches');
-        const matches = populatedUser.matches;
+        let matches = populatedUser.matches;
+
+        // Sort matches by createdAt in descending order
+        matches = matches.sort((a, b) => b.createdAt - a.createdAt);
+
         const populatedMatches = await Promise.all(
             matches.map(async (match) => {
                 return match.populate([
