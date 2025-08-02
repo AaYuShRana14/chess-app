@@ -6,11 +6,7 @@ app.use(cors());
 require("dotenv").config();
 const mongoose = require("mongoose");
 const DATABASE_URL = process.env.DATABASE_URL;
-
-mongoose.connect(DATABASE_URL, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});
+mongoose.connect(DATABASE_URL);
 
 app.use("/signup", require("./Routes/signup"));
 app.use("/login", require("./Routes/login"));
