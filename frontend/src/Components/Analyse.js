@@ -148,49 +148,46 @@ const Analyse = () => {
 
         return (
         <div className="flex">
-            
             <div className="flex flex-col gap-4">
+                {/* Black player info at the top */}
                 <div className="player-info">
-
-                    {match.white.avatar ? (
+                    {match?.black?.avatar ? (
                         <img
-                            src={match.white.avatar}
-                            alt={match.white.name}
+                            src={match.black.avatar}
+                            alt={match.black.name}
                             className="avatar"
                         />
                     ) : null}
-                    <span>{match.white.name || "White Player"}</span>
+                    <span>{match?.black?.name || "Black Player"}</span>
                 </div>
                 <div className="flex flex-col gap-4">
                     <div className="flex">
-                {stockfish !== undefined && <EvaluationBar stockfish={stockfish}></EvaluationBar>}
-                    <Chessboard
-                        id="AnalysisBoard"
-                        position={position}
-                        arePiecesDraggable={false}
-                        showBoardNotation={true}
-                
-                        animationDuration={300}
-                        customBoardStyle={{
-                            width: "400px",
-                            height: "400px",
-                            borderRadius: "10px",
-                            boxShadow: "0 4px 15px rgba(0,0,0,0.5)",
-                        }}
-                       
-                    /> </div>
-
-                    <div className="player-info ">
-                        {match?.black?.avatar ? (
+                        {stockfish !== undefined && <EvaluationBar stockfish={stockfish}></EvaluationBar>}
+                        <Chessboard
+                            id="AnalysisBoard"
+                            position={position}
+                            arePiecesDraggable={false}
+                            showBoardNotation={true}
+                            animationDuration={300}
+                            customBoardStyle={{
+                                width: "400px",
+                                height: "400px",
+                                borderRadius: "10px",
+                                boxShadow: "0 4px 15px rgba(0,0,0,0.5)",
+                            }}
+                        />
+                    </div>
+                    {/* White player info below the board */}
+                    <div className="player-info">
+                        {match.white.avatar ? (
                             <img
-                                src={match.black.avatar}
-                                alt={match.black.name}
+                                src={match.white.avatar}
+                                alt={match.white.name}
                                 className="avatar"
                             />
                         ) : null}
-                        <span>{match?.black?.name || "Black Player"}</span>
+                        <span>{match.white.name || "White Player"}</span>
                     </div>
-
                     <div className="controls ">
                         <button
                             onClick={handleBackward}
