@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef,useCallback } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { useParams } from "react-router-dom";
 import { Chessboard } from "react-chessboard";
 import { Chess } from "chess.js";
@@ -10,8 +10,8 @@ const EvaluationBar = ({ stockfish }) => {
     const [cp, setCp] = useState(0);
     const maxCp = 1000;
 
-    // Invert so white advantage fills from top, black advantage fills from bottom
-    const percentage = Math.min(100, Math.max(0, 50 - (cp / maxCp) * 50));
+    // White advantage grows from bottom, black from top
+    const whitePercentage = Math.min(100, Math.max(0, 50 + (cp / maxCp) * 50));
 
     useEffect(() => {
         if (!stockfish) return;
@@ -40,32 +40,34 @@ const EvaluationBar = ({ stockfish }) => {
                     width: '30px',
                     height: '400px',
                     border: '1px solid white',
-                    backgroundColor: 'black', // black background
+                    backgroundColor: 'black', // default black fill
                 }}
             >
                 <div
                     style={{
                         position: 'absolute',
-                        top: 0,
+                        bottom: 0, // white grows from bottom
                         width: '100%',
-                        backgroundColor: 'white', // white advantage fill
-                        height: `${percentage}%`,
+                        backgroundColor: 'white',
+                        height: `${whitePercentage}%`,
                     }}
                 />
             </div>
         </div>
     );
 };
+
 const Analyse = () => {
     const { matchid } = useParams();
     const [matchId, setMatchId] = useState(null);
     const stockfish = useStockfish();
+    const [match, setMatch] = useState(null);
+
     useEffect(() => {
         if (matchid) {
             setMatchId(matchid);
         }
     }, [matchid]);
-    const [match, setMatch] = useState(null);
 
     useEffect(() => {
         if (matchId) {
@@ -96,7 +98,8 @@ const Analyse = () => {
                 stockfish.postMessage('go depth 20');
                 setMoveIndex(0);
             }
-        }, [match]);
+        }, [match, stockfish]);
+
         const handleForward = useCallback(() => {
             if (moveIndex < moves.length) {
                 const nextMove = moves[moveIndex];
@@ -105,14 +108,14 @@ const Analyse = () => {
                     console.error("Invalid move:", nextMove);
                     return;
                 }
-        
+
                 setPosition(chessRef.current.fen());
                 stockfish.postMessage(`position fen ${chessRef.current.fen()}`);
                 stockfish.postMessage('go depth 20');
                 setMoveIndex(moveIndex + 1);
             }
         }, [moveIndex, moves, stockfish]);
-        
+
         const handleBackward = useCallback(() => {
             if (moveIndex > 0) {
                 chessRef.current.undo();
@@ -122,7 +125,7 @@ const Analyse = () => {
                 setMoveIndex(moveIndex - 1);
             }
         }, [moveIndex, stockfish]);
-        
+
         const handleReset = () => {
             chessRef.current.reset();
             setPosition(chessRef.current.fen());
@@ -130,6 +133,7 @@ const Analyse = () => {
             stockfish.postMessage(chessRef.current.fen());
             stockfish.postMessage('go depth 20');
         };
+
         useEffect(() => {
             const handleKeydown = (e) => {
                 if (e.key === "ArrowRight") {
@@ -144,82 +148,87 @@ const Analyse = () => {
                 window.removeEventListener("keydown", handleKeydown);
             };
         }, [handleForward, handleBackward]);
+
         if (!match) return <div>Loading...</div>;
 
         return (
-        <div className="flex">
-            <div className="flex flex-col gap-4">
-                {/* Black player info at the top */}
-                <div className="player-info">
-                    {match?.black?.avatar ? (
-                        <img
-                            src={match.black.avatar}
-                            alt={match.black.name}
-                            className="avatar"
-                        />
-                    ) : null}
-                    <span>{match?.black?.name || "Black Player"}</span>
-                </div>
+            <div className="flex">
                 <div className="flex flex-col gap-4">
-                    <div className="flex">
-                        {stockfish !== undefined && <EvaluationBar stockfish={stockfish}></EvaluationBar>}
-                        <Chessboard
-                            id="AnalysisBoard"
-                            position={position}
-                            arePiecesDraggable={false}
-                            showBoardNotation={true}
-                            animationDuration={300}
-                            customBoardStyle={{
-                                width: "400px",
-                                height: "400px",
-                                borderRadius: "10px",
-                                boxShadow: "0 4px 15px rgba(0,0,0,0.5)",
-                            }}
-                        />
-                    </div>
-                    {/* White player info below the board */}
+                    {/* Black player info at the top */}
                     <div className="player-info">
-                        {match.white.avatar ? (
+                        {match?.black?.avatar ? (
                             <img
-                                src={match.white.avatar}
-                                alt={match.white.name}
+                                src={match.black.avatar}
+                                alt={match.black.name}
                                 className="avatar"
                             />
                         ) : null}
-                        <span>{match.white.name || "White Player"}</span>
+                        <span>{match?.black?.name || "Black Player"}</span>
                     </div>
-                    <div className="controls ">
-                        <button
-                            onClick={handleBackward}
-                            className="control-button"
-                        >
-                            {"<"}
-                        </button>
-                        <button
-                            onClick={handleReset}
-                            className="control-button reset"
-                        >
-                            Reset
-                        </button>
-                        <button
-                            onClick={handleForward}
-                            className="control-button"
-                        >
-                            {">"}
-                        </button>
+
+                    <div className="flex flex-col gap-4">
+                        <div className="flex">
+                            {stockfish !== undefined && <EvaluationBar stockfish={stockfish} />}
+                            <Chessboard
+                                id="AnalysisBoard"
+                                position={position}
+                                arePiecesDraggable={false}
+                                showBoardNotation={true}
+                                animationDuration={300}
+                                customBoardStyle={{
+                                    width: "400px",
+                                    height: "400px",
+                                    borderRadius: "10px",
+                                    boxShadow: "0 4px 15px rgba(0,0,0,0.5)",
+                                }}
+                            />
+                        </div>
+
+                        {/* White player info below the board */}
+                        <div className="player-info">
+                            {match.white.avatar ? (
+                                <img
+                                    src={match.white.avatar}
+                                    alt={match.white.name}
+                                    className="avatar"
+                                />
+                            ) : null}
+                            <span>{match.white.name || "White Player"}</span>
+                        </div>
+
+                        <div className="controls ">
+                            <button
+                                onClick={handleBackward}
+                                className="control-button"
+                            >
+                                {"<"}
+                            </button>
+                            <button
+                                onClick={handleReset}
+                                className="control-button reset"
+                            >
+                                Reset
+                            </button>
+                            <button
+                                onClick={handleForward}
+                                className="control-button"
+                            >
+                                {">"}
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
         );
     };
 
     return (
         <>
             <Navbar />
-
             <div className="text-white my-20">
-                <h1 className="text-2xl sm:text-4xl mb-10 font-semibold align-middle text-center">Chess Match Analysis</h1>
+                <h1 className="text-2xl sm:text-4xl mb-10 font-semibold align-middle text-center">
+                    Chess Match Analysis
+                </h1>
                 <div className="flex justify-center">
                     <Board />
                 </div>
@@ -229,4 +238,3 @@ const Analyse = () => {
 };
 
 export default Analyse;
-
