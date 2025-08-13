@@ -9,7 +9,10 @@ import './Analyse.css';
 const EvaluationBar = ({ stockfish }) => {
     const [cp, setCp] = useState(0);
     const maxCp = 1000;
-    const percentage = Math.min(100, Math.max(0, 50 + (cp / maxCp) * 50));
+
+    // Invert so white advantage fills from top, black advantage fills from bottom
+    const percentage = Math.min(100, Math.max(0, 50 - (cp / maxCp) * 50));
+
     useEffect(() => {
         if (!stockfish) return;
 
@@ -18,30 +21,37 @@ const EvaluationBar = ({ stockfish }) => {
             if (message.includes("score")) {
                 const match = message.match(/score cp (-?\d+)/);
                 if (match) {
-                    const cp = parseInt(match[1], 10);
-                    setCp(cp);
+                    setCp(parseInt(match[1], 10));
                 }
             }
         };
-        stockfish.onmessage = handleMessage;
 
+        stockfish.onmessage = handleMessage;
         return () => {
             stockfish.onmessage = null;
         };
     }, [stockfish]);
+
     return (
         <div style={{ marginRight: '3rem', alignItems: 'center' }}>
-            <div style={{ position: 'absolute', width: '30px', height: '400px', border: '1px solid white' }}>
+            <div
+                style={{
+                    position: 'absolute',
+                    width: '30px',
+                    height: '400px',
+                    border: '1px solid white',
+                    backgroundColor: 'black', // black background
+                }}
+            >
                 <div
-                    id="evaluation-bar"
                     style={{
                         position: 'absolute',
-                        bottom: 0,
+                        top: 0,
                         width: '100%',
-                        backgroundColor: 'white',
+                        backgroundColor: 'white', // white advantage fill
                         height: `${percentage}%`,
-                    }}>
-                </div>
+                    }}
+                />
             </div>
         </div>
     );
