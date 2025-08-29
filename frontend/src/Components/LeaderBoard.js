@@ -22,7 +22,7 @@ const Leaderboard = () => {
         const fetchUsers = async () => {
             setLoading(true);
             try {
-                const fetchedUsers = await axios.get(`https://chess-app-opin.onrender.com/leaderboard/${pageNumber}`);
+                const fetchedUsers = await axios.get(`${process.env.REACT_APP_SERVER_URL}/leaderboard/${pageNumber}`);
                 setUsers(fetchedUsers.data);
                 setLoading(false);
             } catch (err) {
@@ -142,7 +142,7 @@ const Leaderboard = () => {
                                 }
                                 
                                 return (
-                                    <div key={index} className="leaderboard-user">
+                                    <div key={index} className="leaderboard-user" onClick={() => navigate(`/profile/${user._id}`)}>
                                         {/* Rank */}
                                         <div className="rank-container">
                                             <div className={`leaderboard-rank ${rankClass}`}>

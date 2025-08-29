@@ -33,12 +33,46 @@ export default function Profile() {
       `;
   const navigate = useNavigate();
   const [user, setUser] = useState({});
+  const [me, setMe] = useState(false);
+  const [sentRequest, setSentRequest] = useState(false);
   const { id } = useParams();
 
   useEffect(() => {
+    const checkIfMe = async() => {
+      try{
+
+        const res=await axios.get(`${process.env.REACT_APP_SERVER_URL}/profile/me`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("chess-app-token")}`
+          }
+        });
+        if (res.data._id === id) {
+          setMe(true);
+        }
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    checkIfMe();
+    const alreadySentRequest = async() => {
+      try {
+        const res = await axios.get(`${process.env.REACT_APP_SERVER_URL}/friend/requests/sent/${id}`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("chess-app-token")}`
+          }
+        });
+        const status= res.data.status ;
+        if(status === 'pending' || status === 'accepted') {
+          setSentRequest(true);
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    alreadySentRequest();
     const getProfile = async () => {
       try {
-        const res = await axios.get(`https://chess-app-opin.onrender.com/profile/${id}`);
+        const res = await axios.get(`${process.env.REACT_APP_SERVER_URL}/profile/${id}`);
         setUser(res.data);
       } catch (err) {
         console.log("err");
@@ -47,7 +81,21 @@ export default function Profile() {
     };
     getProfile();
   }, [id, navigate]);
-
+  const handleAddFriend = async () => {
+    try {
+      const res = await axios.post(`${process.env.REACT_APP_SERVER_URL}/friend/request`, {
+        receiverId: id
+      }, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("chess-app-token")}`
+        }
+      });
+      setSentRequest(true);
+    } catch (err) {
+      console.error(err);
+      alert("Error sending friend request.");
+    }
+  };
   return (
     <ChakraProvider>
       <Flex
@@ -137,6 +185,23 @@ export default function Profile() {
             </Text>
             <Text fontSize="lg">{user.totalWins}</Text>
           </FormControl>
+          {!me && (
+            <Button 
+              onClick={handleAddFriend} 
+              bg={"gray.600"}
+              color={"white"}
+              w="full"
+              isDisabled={sentRequest}
+              _hover={{
+                bg: sentRequest ? "gray.600" : "gray.700",
+              }}
+            >
+              {sentRequest ? 
+                <>✓ Friend Request Sent</> : 
+                <>👋 Add Friend</>
+              }
+            </Button>
+          )}
           <Button
             onClick={() => navigate("/")}
             bg={"gray.600"}

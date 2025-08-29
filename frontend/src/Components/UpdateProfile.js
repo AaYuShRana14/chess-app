@@ -32,7 +32,7 @@ export default function UpdateProfile() {
 
     async function getUser() {
       try {
-        const res = await axios.get('https://chess-app-opin.onrender.com/profile/me', {
+        const res = await axios.get(`${process.env.REACT_APP_SERVER_URL}/profile/me`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -66,7 +66,7 @@ export default function UpdateProfile() {
   const updateHandler = async (e) => {
     e.preventDefault();
     try {
-      await axios.put('https://chess-app-opin.onrender.com/updateProfile', 
+      await axios.put(`${process.env.REACT_APP_SERVER_URL}/updateProfile`, 
         {
           handlename,
           avatar,

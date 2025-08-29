@@ -7,7 +7,7 @@ export default function GoogleButton({message}) {
     e.preventDefault();
     try {
         const response = await axios.post(
-            'https://chess-app-opin.onrender.com/googleauth',
+            `${process.env.REACT_APP_SERVER_URL}/googleauth`,
             {},
             {
                 headers: {

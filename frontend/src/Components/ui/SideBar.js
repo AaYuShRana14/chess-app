@@ -140,15 +140,15 @@ const History = ({ me }) => {
   const [error, setError] = useState(null);
   const displayUser = (white, black) => {
     if (white === me.id) {
-      window.location.href = "https://chess-app-two.vercel.app//profile/" + black;
+      window.location.href = `${process.env.FRONTEND_URL}/profile/${black}`;
     } else {
-      window.location.href = "https://chess-app-two.vercel.app//profile/" + white;
+      window.location.href = `${process.env.FRONTEND_URL}/profile/${white}`;
     }
   };
   useEffect(() => {
     const fetchHistory = async () => {
       try {
-        const res = await axios.get("https://chess-app-opin.onrender.com/profile/games", {
+        const res = await axios.get(`${process.env.REACT_APP_SERVER_URL}/profile/games`, {
           headers: {
             Authorization: "Bearer " + localStorage.getItem("chess-app-token"),
           },

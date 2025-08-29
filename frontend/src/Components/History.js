@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import Navbar from "./ui/Navbar";
-
 const History = () => {
     const token = localStorage.getItem("chess-app-token");
     const navigate = useNavigate();
@@ -13,7 +12,7 @@ const History = () => {
     const [userid, setUserid] = useState("");
 
     useEffect(() => {
-        axios.get("https://chess-app-opin.onrender.com/profile/me", {
+        axios.get(`${process.env.REACT_APP_SERVER_URL}/profile/me`, {
             headers: {
                 Authorization: `Bearer ${token}`,
             },
@@ -29,7 +28,7 @@ const History = () => {
 
     useEffect(() => {
         if (userid) {
-            axios.get(`https://chess-app-opin.onrender.com/history/${userid}`)
+            axios.get(`${process.env.REACT_APP_SERVER_URL}/history/${userid}`)
                 .then((response) => {
                     const data = response.data;
                     if (data) {

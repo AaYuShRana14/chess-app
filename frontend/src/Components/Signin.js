@@ -18,7 +18,6 @@ import GoogleButton from "./ui/GoogleButton";
 import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-
 export default function Signin() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -47,7 +46,7 @@ export default function Signin() {
 
     if (emailValid && passwordValid) {
       try {
-        const response = await axios.post("https://chess-app-opin.onrender.com/login", {
+        const response = await axios.post(`${process.env.REACT_APP_SERVER_URL}/login`, {
           email,
           password,
         });

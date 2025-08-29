@@ -35,7 +35,7 @@ export default function ResetPassword() {
         return;
     }
     try {
-      const response = await axios.post(`https://chess-app-opin.onrender.com/reset-password/${token}`, {
+      const response = await axios.post(`${process.env.REACT_APP_SERVER_URL}/reset-password/${token}`, {
         password
       });
       localStorage.setItem("chess-app-token", response.data.token);

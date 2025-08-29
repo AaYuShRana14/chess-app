@@ -5,7 +5,6 @@ import axios from "axios";
 import Confetti from "react-confetti";
 import { useState, useEffect, useRef } from "react";
 import { GameHandler } from "../hooks/GameHandler.js";
-
 const Game = () => {
   const { innerWidth: width, innerHeight: height } = window;
   const playerRef1 = useRef(null);
@@ -91,7 +90,7 @@ const Game = () => {
 
   useEffect(() => {
     axios
-      .get("https://chess-app-opin.onrender.com/profile/me", {
+      .get(`${process.env.REACT_APP_SERVER_URL}/profile/me`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("chess-app-token")}`,
         },

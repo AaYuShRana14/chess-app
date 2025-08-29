@@ -20,6 +20,7 @@ app.use("/game", require("./Routes/game"));
 app.use("/leaderboard", require("./Routes/leaderboard"));
 app.use("/history", require("./Routes/history"));
 app.use("/match", require("./Routes/match"));
+app.use("/friend", require("./Routes/friend"));
 app.listen(8000, () => {
-  console.log("Server started on https://chess-app-opin.onrender.com");
+  console.log("Server started on port 8000");
 });
